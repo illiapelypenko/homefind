@@ -6,7 +6,11 @@ class Header extends Component {
   static propTypes = {};
 
   render() {
-    return <div className={styles.header}>Header</div>;
+    return (
+      <header className={styles.header}>
+        <h1>Homefind</h1>
+      </header>
+    );
   }
 }
 

@@ -1,3 +1,10 @@
+@import '../../styles/vars.scss';
+
 .header {
-  color: red;
+  flex: 0 1 70px;
+  background: $main-color;
+  display: flex;
+  padding: 0px 100px;
+  align-items: center;
+  justify-content: center;
 }
