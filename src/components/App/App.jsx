@@ -10,15 +10,15 @@ export default class App extends Component {
 
   render() {
     return (
-      <Header />
-      // <Router>
-      //   <div className={styles.app}>
-      //     <Switch>
-      //       <Route exact path='/'>
-      //       </Route>
-      //     </Switch>
-      //   </div>
-      // </Router>
+      <Router>
+        <div className={styles.app}>
+          <Switch>
+            <Route exact path='/'>
+              <Header />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }
