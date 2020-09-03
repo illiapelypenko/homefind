@@ -6,21 +6,46 @@ import LocationButton from './LocationButton';
 class SearchPage extends Component {
   static propTypes = {
     getSuggestions: PropTypes.func,
+    getProperties: PropTypes.func,
     onSuggestionClick: PropTypes.func,
     suggestions: PropTypes.array,
+    location: PropTypes.object,
   };
 
   timeout;
 
   state = {
     inputValue: '',
-    focusInput: false,
-    location: {},
+    displaySuggestions: false,
+    error: '',
+    displayError: false,
   };
+
+  static getDerivedStateFromProps(props, state) {
+    const error = 'There were no suggestion found for the given location.';
+    if (props.suggestions.length === 0)
+      return {
+        error,
+        displayError: true,
+      };
+    else
+      return state.error === error ? { error: '', displayError: false } : null;
+  }
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState(state => ({ ...state, inputValue: '' }));
+
+    const { location, getProperties } = this.props;
+
+    if (!location.city) {
+      this.setState(() => ({
+        error: 'Please choose a suggested location',
+        displayError: true,
+      }));
+      return;
+    }
+    this.setState(() => ({ inputValue: '' }));
+    getProperties();
   };
 
   handleChange = e => {
@@ -33,28 +58,54 @@ class SearchPage extends Component {
     };
 
     const inputValue = e.target.value;
-    this.setState(state => ({ ...state, inputValue }), updateSuggestions);
+    this.setState(() => ({ inputValue }), updateSuggestions);
   };
 
   handleSuggestionClick = suggestion => {
-    console.log('!');
-    this.setState({
-      ...this.state,
+    this.setState(() => ({
       inputValue: `${suggestion.state_code}, ${suggestion.city}`,
-    });
+      displaySuggestions: false,
+    }));
     this.props.onSuggestionClick(suggestion);
+  };
+
+  handleLocationButtonClick = () => {
+    this.setState(() => ({
+      error: 'The use of location is currently disabled.',
+      displayError: true,
+    }));
   };
 
   render() {
     const { suggestions } = this.props;
-    const { inputValue, focusInput } = this.state;
-    const displaySuggestions = suggestions.length > 0 && focusInput;
+    const {
+      inputValue,
+      displaySuggestions,
+      suggestionsHover,
+      error,
+      displayError,
+    } = this.state;
 
     return (
       <main className={styles.searchPage}>
         <form className={styles.form} onSubmit={this.handleSubmit}>
-          <div className={styles.locationInput}>
-            <LocationButton />
+          <div
+            className={styles.locationInput}
+            onFocus={() =>
+              this.setState(() => ({
+                displaySuggestions: true,
+                displayError: false,
+              }))
+            }
+            onBlur={() => {
+              if (!suggestionsHover) {
+                this.setState(() => ({
+                  displaySuggestions: false,
+                }));
+              }
+            }}
+          >
+            <LocationButton onClick={this.handleLocationButtonClick} />
             <input
               type='text'
               name='location'
@@ -62,8 +113,6 @@ class SearchPage extends Component {
               value={inputValue}
               onChange={this.handleChange}
               autoComplete='off'
-              onFocus={() => this.setState({ ...this.state, focusInput: true })}
-              onBlur={() => this.setState({ ...this.state, focusInput: false })}
             />
             <span
               className={`${styles.placeholder} ${
@@ -72,25 +121,32 @@ class SearchPage extends Component {
             >
               Name of cities, districts, places
             </span>
+            <ul
+              onMouseOver={() =>
+                this.setState(() => ({ suggestionsHover: true }))
+              }
+              onMouseOut={() =>
+                this.setState(() => ({ suggestionsHover: false }))
+              }
+              className={styles.suggestions}
+            >
+              {displaySuggestions
+                ? suggestions.map((suggestion, index) => {
+                    return (
+                      <li
+                        onClick={() => this.handleSuggestionClick(suggestion)}
+                        key={index}
+                        className={styles.suggestion}
+                      >
+                        {suggestion.state_code}, {suggestion.city}
+                      </li>
+                    );
+                  })
+                : null}
+              {displayError ? <li className={styles.error}>{error}</li> : null}
+            </ul>
           </div>
           <input type='submit' value='Go' className={styles.submitBtn} />
-          <ul
-            className={`${styles.suggestions} ${
-              displaySuggestions ? styles.suggestionsShow : ''
-            }`}
-          >
-            {displaySuggestions
-              ? suggestions.map((suggestion, index) => (
-                  <li
-                    onClick={() => this.handleSuggestionClick(suggestion)}
-                    key={index}
-                    className={styles.suggestion}
-                  >
-                    {suggestion.state_code}, {suggestion.city}
-                  </li>
-                ))
-              : null}
-          </ul>
         </form>
         <div className={styles.background}>
           <h1>Find Home Your Dream!</h1>
