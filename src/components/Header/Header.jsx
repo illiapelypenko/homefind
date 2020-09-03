@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
 import starIcon from '../../assets/icons/star.svg';
-import ArrowRight from './ArrowRight';
+import arrowRightIcon from '../../assets/icons/arrow-right.svg';
 
 class Header extends Component {
   static propTypes = {};
@@ -11,10 +11,14 @@ class Header extends Component {
   render() {
     return (
       <header className={styles.header}>
-        <h1 className={styles.logo}>
-          <ArrowRight className={styles.arrowRight} />
+        <h2 className={styles.logo}>
+          <img
+            src={arrowRightIcon}
+            className={styles.arrowRightIcon}
+            alt='arrow-up'
+          />
           <span>Homefind</span>
-        </h1>
+        </h2>
         <Link to='/faves' className={styles.favesBtn}>
           <img className={styles.starIcon} src={starIcon} alt='star' />
           <span>Your faves</span>

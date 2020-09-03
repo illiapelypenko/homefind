@@ -13,12 +13,8 @@
     line-height: 28px;
     color: #23335d;
 
-    .arrowRight {
+    .arrowRightIcon {
       margin-right: 10px;
-
-      path {
-        fill: #23335d;
-      }
     }
   }
 
@@ -33,6 +29,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    transition: background 0.2s;
 
     &:hover {
       background: #23335d;
