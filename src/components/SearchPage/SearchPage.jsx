@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import styles from './SearchPage.module.scss';
-import LocationButton from './LocationButton';
 
 class SearchPage extends Component {
   static propTypes = {
@@ -9,10 +9,10 @@ class SearchPage extends Component {
     getProperties: PropTypes.func,
     onSuggestionClick: PropTypes.func,
     suggestions: PropTypes.array,
-    location: PropTypes.object,
+    place: PropTypes.object,
   };
 
-  timeout;
+  #timeout;
 
   state = {
     inputValue: '',
@@ -35,77 +35,98 @@ class SearchPage extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const { location, getProperties } = this.props;
+    const { place } = this.props;
 
-    if (!location.city) {
-      this.setState(() => ({
+    if (!place.city) {
+      this.setState({
         error: 'Please choose a suggested location',
         displayError: true,
-      }));
+      });
       return;
     }
-    this.setState(() => ({ inputValue: '' }));
-    getProperties();
+
+    this.setState({ inputValue: '' });
+
+    this.props.history.push('/properties');
   };
 
   handleChange = e => {
     const updateSuggestions = () => {
-      if (this.timeout) clearTimeout(this.timeout);
-      this.timeout = setTimeout(
+      if (this.#timeout) clearTimeout(this.#timeout);
+      this.#timeout = setTimeout(
         () => this.props.getSuggestions(this.state.inputValue),
         1000
       );
     };
 
     const inputValue = e.target.value;
-    this.setState(() => ({ inputValue }), updateSuggestions);
+    this.setState({ inputValue }, updateSuggestions);
   };
 
   handleSuggestionClick = suggestion => {
-    this.setState(() => ({
+    this.setState({
       inputValue: `${suggestion.state_code}, ${suggestion.city}`,
       displaySuggestions: false,
-    }));
+    });
     this.props.onSuggestionClick(suggestion);
   };
 
   handleLocationButtonClick = () => {
-    this.setState(() => ({
+    this.setState({
       error: 'The use of location is currently disabled.',
       displayError: true,
-    }));
+    });
+  };
+
+  handleFocus = () => {
+    this.setState({
+      displaySuggestions: true,
+      displayError: false,
+    });
+  };
+
+  handleBlur = () => {
+    if (!this.state.suggestionsHover) {
+      this.setState({
+        displaySuggestions: false,
+      });
+    }
+  };
+
+  handleMouseOver = () => {
+    this.setState({ suggestionsHover: true });
+  };
+
+  handleMouseOut = () => {
+    this.setState({ suggestionsHover: false });
   };
 
   render() {
     const { suggestions } = this.props;
-    const {
-      inputValue,
-      displaySuggestions,
-      suggestionsHover,
-      error,
-      displayError,
-    } = this.state;
+    const { inputValue, displaySuggestions, error, displayError } = this.state;
 
     return (
-      <main className={styles.searchPage}>
+      <main className={styles.container}>
         <form className={styles.form} onSubmit={this.handleSubmit}>
           <div
             className={styles.locationInput}
-            onFocus={() =>
-              this.setState(() => ({
-                displaySuggestions: true,
-                displayError: false,
-              }))
-            }
-            onBlur={() => {
-              if (!suggestionsHover) {
-                this.setState(() => ({
-                  displaySuggestions: false,
-                }));
-              }
-            }}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
           >
-            <LocationButton onClick={this.handleLocationButtonClick} />
+            <button
+              className={styles.locationBtn}
+              onClick={this.handleLocationButtonClick}
+            >
+              <svg
+                width='12'
+                height='14'
+                viewBox='0 0 12 14'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path d='M5.68693 12.459C6.00281 13.4437 6.602 13.4784 7.02469 12.5398L11.8299 1.86278C12.2526 0.922268 11.8607 0.516777 10.9547 0.95512L0.658114 5.9374C-0.247905 6.37575 -0.21351 6.99712 0.735049 7.32565L4.44873 8.60876L5.68693 12.459Z' />
+              </svg>
+            </button>
+
             <input
               type='text'
               name='location'
@@ -114,37 +135,34 @@ class SearchPage extends Component {
               autoComplete='off'
               onChange={this.handleChange}
             />
-            <span className={styles.placeholder}>
+            <span
+              className={`${styles.placeholder} ${
+                inputValue ? styles.placeholderTop : ''
+              }`}
+            >
               Name of cities, districts, places
             </span>
             <ul
-              onMouseOver={() =>
-                this.setState(() => ({ suggestionsHover: true }))
-              }
-              onMouseOut={() =>
-                this.setState(() => ({ suggestionsHover: false }))
-              }
+              onMouseOver={this.handleMouseOver}
+              onMouseOut={this.handleMouseOut}
               className={styles.suggestions}
             >
-              {displaySuggestions
-                ? suggestions.map((suggestion, index) => {
-                    return (
-                      <li
-                        onClick={() => this.handleSuggestionClick(suggestion)}
-                        key={index}
-                        className={styles.suggestion}
-                      >
-                        {suggestion.state_code}, {suggestion.city}
-                      </li>
-                    );
-                  })
-                : null}
-              {displayError ? <li className={styles.error}>{error}</li> : null}
+              {displaySuggestions &&
+                suggestions.map((suggestion, index) => (
+                  <li
+                    onClick={() => this.handleSuggestionClick(suggestion)}
+                    key={index}
+                    className={styles.suggestion}
+                  >
+                    {suggestion.state_code}, {suggestion.city}
+                  </li>
+                ))}
+              {displayError && <li className={styles.error}>{error}</li>}
             </ul>
           </div>
           <input type='submit' value='Go' className={styles.submitBtn} />
         </form>
-        <div className={styles.background}>
+        <div className={styles.pageContent}>
           <h1>Find Home Your Dream!</h1>
           <span>
             Use the form above to search for houses to buy. You can search by
@@ -157,4 +175,4 @@ class SearchPage extends Component {
   }
 }
 
-export default SearchPage;
+export default withRouter(SearchPage);

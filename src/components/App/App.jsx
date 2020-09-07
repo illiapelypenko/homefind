@@ -1,39 +1,50 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 import Header from '../Header/Header';
 import SearchPage from '../SearchPage/SearchPage';
 import { http } from '../../utils/request';
 import styles from './App.module.scss';
 
+const history = createBrowserHistory();
+
 export default class App extends Component {
   state = {
     suggestions: [],
-    location: {},
+    place: {},
   };
 
   getProperties = async () => {};
 
-  getSuggestions = async location => {
-    if (!location) location = 'a';
-    const BASE_URL = 'https://realtor.p.rapidapi.com';
-    const SUGGESTIONS_URL = BASE_URL + '/locations/auto-complete';
-    const urlParams = encodeURI(`?input=${location}`);
-    const suggestions = await http({ url: SUGGESTIONS_URL, urlParams });
-    this.setState({ suggestions });
+  getSuggestions = async place => {
+    if (!place) place = 'a';
+
+    try {
+      const BASE_URL = 'https://realtor.p.rapidapi.com';
+      const SUGGESTIONS_URL = BASE_URL + '/locations/auto-complete';
+      const urlParams = encodeURI(`?input=${place}`);
+      const suggestions = await http(SUGGESTIONS_URL, urlParams);
+
+      this.setState({
+        suggestions: suggestions ? suggestions.autocomplete : [],
+      });
+    } catch (e) {
+      // set error in app root ?
+    }
   };
 
   componentDidMount() {
     this.getSuggestions('a');
   }
 
-  handleSuggestionClick = location => {
-    this.setState({ location });
+  handleSuggestionClick = place => {
+    this.setState({ place });
   };
 
   render() {
     return (
-      <Router>
-        <div className={styles.app}>
+      <Router history={history}>
+        <div className={styles.container}>
           <Switch>
             <Route exact path='/'>
               <Header />
@@ -42,7 +53,7 @@ export default class App extends Component {
                 getProperties={this.getProperties}
                 suggestions={this.state.suggestions}
                 onSuggestionClick={this.handleSuggestionClick}
-                location={this.state.location}
+                place={this.state.place}
               />
             </Route>
           </Switch>

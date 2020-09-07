@@ -1,4 +1,6 @@
-.searchPage {
+@import '../../styles/vars.scss';
+
+.container {
   display: flex;
   flex: 1 1;
   flex-direction: column;
@@ -7,7 +9,6 @@
 
   .form {
     display: flex;
-    flex: 0 1;
     height: 56px;
     margin: 30px 0px;
   }
@@ -19,37 +20,47 @@
   align-items: center;
   width: 410px;
   padding-left: 20px;
-  border: 1px solid #dbdfe1;
+  border: 1px solid $zircon;
   border-radius: 3px 0px 0px 0px;
-  box-shadow: 0px 4px 34px rgba(9, 44, 76, 0.16);
-
-  .locationBtn {
-    margin-right: 10px;
-    cursor: pointer;
-
-    &:hover {
-      path {
-        fill: #23335d;
-      }
-    }
-
-    path {
-      fill: #dbdfe1;
-    }
-  }
+  box-shadow: 0px 4px 34px rgba($sapphire, 0.16);
 
   input {
     z-index: 2;
     width: 100%;
     height: 100%;
+
+
+    // placing placeholder in the top is devided between css and js, css for focus and js for typing
+    &:focus+.placeholder {
+      top: 2px;
+      color: rgba($fiord, 0.7);
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 14px;
+    }
+  }
+}
+
+.locationBtn {
+  margin-right: 10px;
+  cursor: pointer;
+
+  &:hover {
+    path {
+      fill: $regal-blue;
+    }
+  }
+
+  path {
+    fill: $location-icon-color;
   }
 }
 
 .submitBtn {
   width: 120px;
   border-radius: 0px 3px 3px 0px;
-  background: #e6605b;
-  color: #fff;
+  background: $flamingo;
+  color: white;
   font-weight: bold;
   font-size: 18px;
   line-height: 21px;
@@ -57,7 +68,7 @@
   transition: background 0.2s;
 
   &:hover {
-    background: darken(#e6605b, 10%);
+    background: darken($flamingo, 10%);
   }
 }
 
@@ -65,14 +76,14 @@
   position: absolute;
   z-index: 1;
   margin-left: 22px;
-  color: rgba(56, 64, 71, 0.8);
+  color: rgba($arsenic, 0.8);
   font-weight: bold;
   font-size: 14px;
   line-height: 16px;
 
-  .placeholderTop {
+  &Top {
     top: 2px;
-    color: rgba(74, 80, 99, 0.7);
+    color: rgba($fiord, 0.7);
     font-weight: normal;
     font-size: 12px;
     line-height: 14px;
@@ -84,7 +95,7 @@
   top: 55px;
   left: -1px;
   width: 410px;
-  background: #fff;
+  background: white;
 
   .suggestion {
     padding: 10px 20px;
@@ -94,7 +105,7 @@
     cursor: pointer;
 
     &:hover {
-      color: #000;
+      color: black;
       font-weight: bold;
       text-decoration: underline;
     }
@@ -107,19 +118,19 @@
 
 .error {
   padding: 28px;
-  color: #E6605B;
+  color: $flamingo;
   font-size: 14px;
   line-height: 19px;
 }
 
-.background {
+.pageContent {
   flex: 1 1;
   padding: 100px;
   border-radius: 30px;
   background: url('../../assets/background.jpg') center;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  color: #fff;
+  color: white;
 
   h1 {
     margin-bottom: 17px;

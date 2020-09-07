@@ -1,4 +1,4 @@
-export async function http({ url, urlParams = '', method = 'GET' }) {
+export async function http(url, urlParams = '', method = 'GET') {
   const API_KEY = '111f4ef646msh0edca9349d6475cp1b2e0cjsn85aad4b1d986';
   const X_RAPID_HOST = 'realtor.p.rapidapi.com';
   const headers = {
@@ -23,10 +23,16 @@ export async function http({ url, urlParams = '', method = 'GET' }) {
       });
 
     const response = await Promise.race([query(), timeout()]);
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
     const data = await response.json();
 
-    return data.autocomplete;
+    return data;
   } catch (e) {
     console.log(e);
+    throw new Error(e);
   }
 }
