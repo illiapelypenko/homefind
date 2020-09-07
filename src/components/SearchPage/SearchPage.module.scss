@@ -18,9 +18,9 @@
   display: flex;
   align-items: center;
   width: 410px;
-  padding: 0px 20px;
+  padding-left: 20px;
   border: 1px solid #dbdfe1;
-  border-radius: 3px 0px 0px 3px;
+  border-radius: 3px 0px 0px 0px;
   box-shadow: 0px 4px 34px rgba(9, 44, 76, 0.16);
 
   .locationBtn {
@@ -70,7 +70,7 @@
   font-size: 14px;
   line-height: 16px;
 
-  &OnTop {
+  .placeholderTop {
     top: 2px;
     color: rgba(74, 80, 99, 0.7);
     font-weight: normal;
@@ -81,8 +81,8 @@
 
 .suggestions {
   position: absolute;
-  top: 56px;
-  left: 0px;
+  top: 55px;
+  left: -1px;
   width: 410px;
   background: #fff;
 

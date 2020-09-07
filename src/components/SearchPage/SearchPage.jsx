@@ -111,14 +111,10 @@ class SearchPage extends Component {
               name='location'
               id='location'
               value={inputValue}
-              onChange={this.handleChange}
               autoComplete='off'
+              onChange={this.handleChange}
             />
-            <span
-              className={`${styles.placeholder} ${
-                inputValue && styles.placeholderOnTop
-              }`}
-            >
+            <span className={styles.placeholder}>
               Name of cities, districts, places
             </span>
             <ul
