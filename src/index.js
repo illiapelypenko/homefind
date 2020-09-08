@@ -1,6 +1,6 @@
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App/App.jsx';
+import App from './routes/App';
 import './styles/base.scss';
 
 ReactDOM.render(
