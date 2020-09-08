@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
-import Header from '../components/Header/Header';
 import { createBrowserHistory } from 'history';
+import Header from '../components/Header/Header';
 import { Home } from '../containers';
 import styles from './App.module.scss';
 
@@ -13,7 +13,7 @@ const App = () => {
       <div className={styles.container}>
         <Header />
         <Switch>
-          <Route exact path='/'>
+          <Route exact path="/">
             <Home />
           </Route>
         </Switch>

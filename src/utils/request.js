@@ -32,7 +32,8 @@ export async function http(url, urlParams = '', method = 'GET') {
 
     return data;
   } catch (e) {
-    console.log(e);
-    throw new Error(e);
+    throw new Error(
+      'An error occurred while searching. Please check your network connection and try again.'
+    );
   }
 }

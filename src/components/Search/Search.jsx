@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import styles from './Search.module.scss';
 import { http } from '../../utils/request';
+import styles from './Search.module.scss';
 
 class SearchPage extends Component {
   #timeout;
@@ -9,10 +9,9 @@ class SearchPage extends Component {
   state = {
     inputValue: '',
     displaySuggestions: false,
-    error: '',
-    displayError: false,
     place: {},
     suggestions: [],
+    error: '',
   };
 
   getSuggestions = async place => {
@@ -24,11 +23,18 @@ class SearchPage extends Component {
       const urlParams = encodeURI(`?input=${place}`);
       const suggestions = await http(SUGGESTIONS_URL, urlParams);
 
+      if (suggestions.autocomplete.length === 0) {
+        this.setState({
+          error: 'There were no suggestions found for the given location.',
+        });
+        return;
+      }
+
       this.setState({
-        suggestions: suggestions ? suggestions.autocomplete : [],
+        suggestions: suggestions.autocomplete,
       });
-    } catch (e) {
-      // set error
+    } catch (error) {
+      this.setState({ error: error.message });
     }
   };
 
@@ -37,32 +43,16 @@ class SearchPage extends Component {
   }
 
   componentDidUpdate() {
-    const error = 'There were no suggestion found for the given location.';
-
-    if (this.state.suggestions.length === 0)
-      this.setState({
-        error,
-        displayError: true,
-      });
-    else
-      this.state.error === error &&
-        this.setState({ error: '', displayError: false });
+    if (this.state.error) setTimeout(() => this.setState({ error: '' }), 2000);
   }
 
   handleSubmit = e => {
     e.preventDefault();
-
     if (!this.state.place.city) {
-      this.setState({
-        error: 'Please choose a suggested location',
-        displayError: true,
-      });
+      this.setState({ error: 'Please choose a suggested place' });
       return;
     }
-
     this.setState({ inputValue: '' });
-
-    this.props.history.push('/properties');
   };
 
   handleChange = e => {
@@ -82,21 +72,13 @@ class SearchPage extends Component {
     this.setState({
       inputValue: `${suggestion.state_code}, ${suggestion.city}`,
       displaySuggestions: false,
-    });
-    this.onSuggestionClick(suggestion);
-  };
-
-  handleLocationButtonClick = () => {
-    this.setState({
-      error: 'The use of location is currently disabled.',
-      displayError: true,
+      place: suggestion,
     });
   };
 
   handleFocus = () => {
     this.setState({
       displaySuggestions: true,
-      displayError: false,
     });
   };
 
@@ -116,22 +98,39 @@ class SearchPage extends Component {
     this.setState({ suggestionsHover: false });
   };
 
+  handleLocationButtonClick = e => {
+    e.preventDefault();
+    this.setState({ error: 'The use of location is currently disabled.' });
+  };
+
   render() {
-    const {
-      inputValue,
-      displaySuggestions,
-      error,
-      displayError,
-      suggestions,
-    } = this.state;
+    const { inputValue, displaySuggestions, suggestions, error } = this.state;
+
+    function hightlight(suggestion) {
+      const text = `${suggestion.state_code}, ${suggestion.city}`;
+
+      const jsxText = text
+        .split('')
+        .map((char, index) => <span key={index}>{char}</span>);
+
+      const index = `${suggestion.state_code}, ${suggestion.city}`.search(
+        new RegExp(inputValue, 'i')
+      );
+
+      let keyIndex = index;
+
+      const hightlightedJsx = [...text]
+        .splice(index, inputValue.length)
+        .map(char => <b key={keyIndex++}>{char}</b>);
+
+      jsxText.splice(index, inputValue.length, ...hightlightedJsx);
+
+      return jsxText;
+    }
 
     return (
-      <form className={styles.form} onSubmit={this.handleSubmit}>
-        <div
-          className={styles.locationInput}
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
-        >
+      <form className={styles.form}>
+        <div className={styles.locationInput}>
           <button
             className={styles.locationBtn}
             onClick={this.handleLocationButtonClick}
@@ -153,6 +152,8 @@ class SearchPage extends Component {
             value={inputValue}
             autoComplete="off"
             onChange={this.handleChange}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
           />
           <span
             className={`${styles.placeholder} ${
@@ -167,19 +168,25 @@ class SearchPage extends Component {
             className={styles.suggestions}
           >
             {displaySuggestions &&
+              !error &&
               suggestions.map((suggestion, index) => (
                 <li
                   onClick={() => this.handleSuggestionClick(suggestion)}
                   key={index}
                   className={styles.suggestion}
                 >
-                  {suggestion.state_code}, {suggestion.city}
+                  {hightlight(suggestion)}
                 </li>
               ))}
-            {displayError && <li className={styles.error}>{error}</li>}
+            {error && <li className={styles.error}>{error}</li>}
           </ul>
         </div>
-        <input type="submit" value="Go" className={styles.submitBtn} />
+        <input
+          onClick={this.handleSubmit}
+          type="submit"
+          value="Go"
+          className={styles.submitBtn}
+        />
       </form>
     );
   }
