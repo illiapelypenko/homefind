@@ -79,6 +79,7 @@ class SearchPage extends Component {
   handleFocus = () => {
     this.setState({
       displaySuggestions: true,
+      error: '',
     });
   };
 
