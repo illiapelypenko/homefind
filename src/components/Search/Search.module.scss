@@ -21,9 +21,8 @@
     width: 100%;
     height: 100%;
 
-
     // placing placeholder in the top is devided between css and js, css for focus and js for typing
-    &:focus+.placeholder {
+    &:focus + .placeholder {
       top: 2px;
       color: rgba($fiord, 0.7);
       font-weight: normal;
@@ -88,23 +87,23 @@
   left: -1px;
   width: 410px;
   background: white;
+}
 
-  .suggestion {
-    padding: 10px 20px;
-    color: #384047;
-    font-size: 14px;
-    line-height: 16px;
-    cursor: pointer;
+.suggestion {
+  padding: 10px 20px;
+  color: #384047;
+  font-size: 14px;
+  line-height: 16px;
+  cursor: pointer;
 
-    &:hover {
-      color: black;
-      font-weight: bold;
-      text-decoration: underline;
-    }
+  &:hover {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+  }
 
-    .toHightlight {
-      color: red;
-    }
+  .toHightlight {
+    color: red;
   }
 }
 
