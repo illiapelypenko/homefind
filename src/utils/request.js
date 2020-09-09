@@ -1,5 +1,5 @@
 export async function http(url, urlParams = '', method = 'GET') {
-  const API_KEY = '111f4ef646msh0edca9349d6475cp1b2e0cjsn85aad4b1d986';
+  const API_KEY = '602f460c5fmsh71d7ba1f189d2f0p162159jsnda4f7df0403f';
   const X_RAPID_HOST = 'realtor.p.rapidapi.com';
   const headers = {
     'x-rapidapi-host': X_RAPID_HOST,
