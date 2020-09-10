@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { http } from '../../utils/request';
 import styles from './Search.module.scss';
 
-class SearchPage extends Component {
+class SearchComponent extends Component {
   #timeout;
 
   state = {
@@ -13,6 +13,14 @@ class SearchPage extends Component {
     suggestions: [],
     error: '',
   };
+
+  componentDidMount() {
+    this.getSuggestions('a');
+  }
+
+  componentDidUpdate() {
+    if (this.state.error) setTimeout(() => this.setState({ error: '' }), 2000);
+  }
 
   getSuggestions = async place => {
     if (!place) place = 'a';
@@ -26,6 +34,7 @@ class SearchPage extends Component {
       if (suggestions.autocomplete.length === 0) {
         this.setState({
           error: 'There were no suggestions found for the given location.',
+          suggestions: [],
         });
         return;
       }
@@ -38,42 +47,9 @@ class SearchPage extends Component {
     }
   };
 
-  componentDidMount() {
-    this.getSuggestions('a');
-  }
-
-  componentDidUpdate() {
-    if (this.state.error) setTimeout(() => this.setState({ error: '' }), 2000);
-  }
-
-  handleSubmit = e => {
+  handleLocationButtonClick = e => {
     e.preventDefault();
-    if (!this.state.place.city) {
-      this.setState({ error: 'Please choose a suggested place' });
-      return;
-    }
-    this.setState({ inputValue: '' });
-  };
-
-  handleChange = e => {
-    const updateSuggestions = () => {
-      if (this.#timeout) clearTimeout(this.#timeout);
-      this.#timeout = setTimeout(
-        () => this.getSuggestions(this.state.inputValue),
-        1000
-      );
-    };
-
-    const inputValue = e.target.value;
-    this.setState({ inputValue }, updateSuggestions);
-  };
-
-  handleSuggestionClick = suggestion => {
-    this.setState({
-      inputValue: `${suggestion.state_code}, ${suggestion.city}`,
-      displaySuggestions: false,
-      place: suggestion,
-    });
+    this.setState({ error: 'The use of location is currently disabled.' });
   };
 
   handleFocus = () => {
@@ -91,6 +67,19 @@ class SearchPage extends Component {
     }
   };
 
+  handleChange = e => {
+    const updateSuggestions = () => {
+      if (this.#timeout) clearTimeout(this.#timeout);
+      this.#timeout = setTimeout(
+        () => this.getSuggestions(this.state.inputValue),
+        1000
+      );
+    };
+
+    const inputValue = e.target.value;
+    this.setState({ inputValue }, updateSuggestions);
+  };
+
   handleMouseOver = () => {
     this.setState({ suggestionsHover: true });
   };
@@ -99,35 +88,25 @@ class SearchPage extends Component {
     this.setState({ suggestionsHover: false });
   };
 
-  handleLocationButtonClick = e => {
+  handleSuggestionClick = suggestion => {
+    this.setState({
+      inputValue: `${suggestion.state_code}, ${suggestion.city}`,
+      displaySuggestions: false,
+      place: suggestion,
+    });
+  };
+
+  handleSubmit = e => {
     e.preventDefault();
-    this.setState({ error: 'The use of location is currently disabled.' });
+    if (!this.state.place.city) {
+      this.setState({ error: 'Please choose a suggested place' });
+      return;
+    }
+    this.setState({ inputValue: '' });
   };
 
   render() {
     const { inputValue, displaySuggestions, suggestions, error } = this.state;
-
-    function hightlight(suggestion) {
-      const text = `${suggestion.state_code}, ${suggestion.city}`;
-
-      const jsxText = text
-        .split('')
-        .map((char, index) => <span key={index}>{char}</span>);
-
-      const index = `${suggestion.state_code}, ${suggestion.city}`.search(
-        new RegExp(inputValue, 'i')
-      );
-
-      let keyIndex = index;
-
-      const hightlightedJsx = [...text]
-        .splice(index, inputValue.length)
-        .map(char => <b key={keyIndex++}>{char}</b>);
-
-      jsxText.splice(index, inputValue.length, ...hightlightedJsx);
-
-      return jsxText;
-    }
 
     return (
       <form className={styles.form}>
@@ -156,13 +135,11 @@ class SearchPage extends Component {
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
           />
-          <span
-            className={`${styles.placeholder} ${
-              inputValue ? styles.placeholderTop : ''
-            }`}
-          >
-            Name of cities, districts, places
-          </span>
+          {!inputValue && (
+            <span className={styles.placeholder}>
+              Name of cities, districts, places
+            </span>
+          )}
           <ul
             onMouseOver={this.handleMouseOver}
             onMouseOut={this.handleMouseOut}
@@ -170,15 +147,18 @@ class SearchPage extends Component {
           >
             {displaySuggestions &&
               !error &&
-              suggestions.map((suggestion, index) => (
-                <li
-                  onClick={() => this.handleSuggestionClick(suggestion)}
-                  key={index}
-                  className={styles.suggestion}
-                >
-                  {hightlight(suggestion)}
-                </li>
-              ))}
+              suggestions
+                .filter(suggestion => suggestion.area_type === 'city')
+                .map((suggestion, index) => (
+                  <li
+                    onClick={() => this.handleSuggestionClick(suggestion)}
+                    key={index}
+                    className={styles.suggestion}
+                  >
+                    {suggestion.state_code}, {suggestion.city}
+                  </li>
+                ))
+                .slice(0, 6)}
             {error && <li className={styles.error}>{error}</li>}
           </ul>
         </div>
@@ -193,4 +173,4 @@ class SearchPage extends Component {
   }
 }
 
-export default withRouter(SearchPage);
+export const Search = withRouter(SearchComponent);
