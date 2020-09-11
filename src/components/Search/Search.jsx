@@ -49,6 +49,7 @@ class SearchComponent extends Component {
 
   handleLocationButtonClick = e => {
     e.preventDefault();
+
     this.setState({ error: 'The use of location is currently disabled.' });
   };
 
@@ -70,6 +71,7 @@ class SearchComponent extends Component {
   handleChange = e => {
     const updateSuggestions = () => {
       if (this.#timeout) clearTimeout(this.#timeout);
+
       this.#timeout = setTimeout(
         () => this.getSuggestions(this.state.inputValue),
         1000
@@ -98,11 +100,17 @@ class SearchComponent extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    if (!this.state.place.city) {
+
+    const place = this.state.place;
+
+    if (!place.city) {
       this.setState({ error: 'Please choose a suggested place' });
       return;
     }
+
     this.setState({ inputValue: '' });
+
+    this.props.history.push('/search', { place });
   };
 
   render() {
