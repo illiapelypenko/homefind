@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { ReactComponent as LocationIcon } from '../../assets/icons/location.svg';
 import { http } from '../../utils/request';
 import styles from './Search.module.scss';
 
@@ -105,8 +106,25 @@ class SearchComponent extends Component {
     this.setState({ inputValue: '' });
   };
 
+  renderSuggestions = () => {
+    const { suggestions } = this.state;
+
+    return suggestions
+      .filter(suggestion => suggestion.area_type === 'city')
+      .map((suggestion, index) => (
+        <li
+          onClick={() => this.handleSuggestionClick(suggestion)}
+          key={index}
+          className={styles.suggestion}
+        >
+          {suggestion.state_code}, {suggestion.city}
+        </li>
+      ))
+      .slice(0, 6);
+  };
+
   render() {
-    const { inputValue, displaySuggestions, suggestions, error } = this.state;
+    const { inputValue, displaySuggestions, error } = this.state;
 
     return (
       <form className={styles.form}>
@@ -115,14 +133,7 @@ class SearchComponent extends Component {
             className={styles.locationBtn}
             onClick={this.handleLocationButtonClick}
           >
-            <svg
-              width="12"
-              height="14"
-              viewBox="0 0 12 14"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M5.68693 12.459C6.00281 13.4437 6.602 13.4784 7.02469 12.5398L11.8299 1.86278C12.2526 0.922268 11.8607 0.516777 10.9547 0.95512L0.658114 5.9374C-0.247905 6.37575 -0.21351 6.99712 0.735049 7.32565L4.44873 8.60876L5.68693 12.459Z" />
-            </svg>
+            <LocationIcon />
           </button>
 
           <input
@@ -145,20 +156,7 @@ class SearchComponent extends Component {
             onMouseOut={this.handleMouseOut}
             className={styles.suggestions}
           >
-            {displaySuggestions &&
-              !error &&
-              suggestions
-                .filter(suggestion => suggestion.area_type === 'city')
-                .map((suggestion, index) => (
-                  <li
-                    onClick={() => this.handleSuggestionClick(suggestion)}
-                    key={index}
-                    className={styles.suggestion}
-                  >
-                    {suggestion.state_code}, {suggestion.city}
-                  </li>
-                ))
-                .slice(0, 6)}
+            {displaySuggestions && !error && this.renderSuggestions()}
             {error && <li className={styles.error}>{error}</li>}
           </ul>
         </div>
