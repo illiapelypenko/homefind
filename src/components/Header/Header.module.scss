@@ -1,46 +1,44 @@
+@import '../../styles/vars.scss';
+
 .header {
-  flex: 0 1 95px;
   display: flex;
-  padding: 0px 100px;
+  flex: 0 1 95px;
   align-items: center;
   justify-content: space-between;
+  padding: 0px 100px;
   color: #fff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 4px 10px rgba(black, 0.15);
+}
 
-  .logo {
-    font-weight: bold;
-    font-size: 1.5rem;
-    line-height: 28px;
-    color: #23335d;
+.logo {
+  color: $flamingo;
+  font-weight: bold;
+  font-size: 1.5rem;
+  line-height: 28px;
 
-    .arrowRight {
-      margin-right: 10px;
+  .logoIcon {
+    margin-right: 10px;
 
-      path {
-        fill: #23335d;
-      }
+    path {
+      fill: $flamingo;
     }
   }
+}
 
-  .favesBtn {
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 14px;
-    border: 1px solid #23335d;
-    border-radius: 3px;
-    padding: 10px;
-    color: #23335d;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+.favesBtn {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid $lightgrey;
+  border-radius: 3px;
+  color: $shuttleGrey;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
 
-    &:hover {
-      background: #23335d;
-      color: #fff;
-    }
-
-    .starIcon {
-      margin-right: 4px;
-    }
+  .starIcon {
+    margin-right: 4px;
   }
 }

@@ -1,0 +1,100 @@
+@import '../../styles/vars.scss';
+
+.form {
+  display: flex;
+  height: 56px;
+  margin: 30px 0px;
+}
+
+.locationInput {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 410px;
+  padding-left: 20px;
+  border: 1px solid $zircon;
+  border-radius: 3px 0px 0px 0px;
+  box-shadow: 0px 4px 34px rgba($sapphire, 0.16);
+
+  input {
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+
+    &:focus + .placeholder {
+      display: none;
+    }
+  }
+}
+
+.locationBtn {
+  margin-right: 10px;
+  cursor: pointer;
+
+  &:hover {
+    path {
+      fill: $regal-blue;
+    }
+  }
+
+  path {
+    fill: $lightgrey;
+  }
+}
+
+.submitBtn {
+  width: 120px;
+  border-radius: 0px 3px 3px 0px;
+  background: $flamingo;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 21px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: darken($flamingo, 10%);
+  }
+}
+
+.placeholder {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  margin-left: 22px;
+  color: rgba($arsenic, 0.8);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.suggestions {
+  position: absolute;
+  top: 55px;
+  left: -1px;
+  width: 410px;
+  background: white;
+}
+
+.suggestion {
+  padding: 10px 20px;
+  color: #384047;
+  font-size: 14px;
+  line-height: 16px;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 600;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 16px;
+  }
+}
+
+.error {
+  padding: 28px;
+  color: $flamingo;
+  font-size: 14px;
+  line-height: 19px;
+}

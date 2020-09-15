@@ -1,27 +1,22 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { ReactComponent as StarIcon } from '../../assets/icons/star.svg';
+import { ReactComponent as LogoIcon } from '../../assets/icons/arrow-right.svg';
 import styles from './Header.module.scss';
-import starIcon from '../../assets/icons/star.svg';
-import ArrowRight from './ArrowRight';
 
-class Header extends Component {
-  static propTypes = {};
-
+export class Header extends Component {
   render() {
     return (
       <header className={styles.header}>
-        <h1 className={styles.logo}>
-          <ArrowRight className={styles.arrowRight} />
+        <h2 className={styles.logo}>
+          <LogoIcon className={styles.logoIcon} />
           <span>Homefind</span>
-        </h1>
-        <Link to='/faves' className={styles.favesBtn}>
-          <img className={styles.starIcon} src={starIcon} alt='star' />
+        </h2>
+        <Link to="/faves" className={styles.favesBtn}>
+          <StarIcon className={styles.starIcon} />
           <span>Your faves</span>
         </Link>
       </header>
     );
   }
 }
-
-export default Header;
