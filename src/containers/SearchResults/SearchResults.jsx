@@ -3,10 +3,6 @@ import { withRouter } from 'react-router-dom';
 import { PropertyList, SearchResultsHeader } from '../../components';
 import { http } from '../../utils/request';
 import styles from './SearchResults.module.scss';
-// import { ReactComponent as StarIcon } from '../../assets/icons/star.svg';
-// import Img from '../../assets/background.jpg';
-
-import Properties from './properties'; // get properties from file
 
 class SearchResultsComponent extends Component {
   state = {
@@ -34,31 +30,42 @@ class SearchResultsComponent extends Component {
 
   async getProperties({ city, state_code }) {
     try {
-      // const BASE_URL = 'https://realtor.p.rapidapi.com';
-      // const PROPERTIES_FOR_SALE_URL = BASE_URL + '/properties/v2/list-for-sale';
-      // const PROPERTIES_FOR_RENT_URL = BASE_URL + '/properties/v2/list-for-rent';
-      // const urlParams = encodeURI(
-      //   `?sort=relevance&city=${city}&limit=500&offset=0&state_code=${state_code}`
-      // );
+      const BASE_URL = 'https://realtor.p.rapidapi.com';
+      const PROPERTIES_FOR_SALE_URL = BASE_URL + '/properties/v2/list-for-sale';
+      const PROPERTIES_FOR_RENT_URL = BASE_URL + '/properties/v2/list-for-rent';
+      const urlParams = encodeURI(
+        `?sort=relevance&city=${city}&limit=500&offset=0&state_code=${state_code}`
+      );
 
-      // const propertiesForSale = await http(PROPERTIES_FOR_SALE_URL, urlParams);
-      // const propertiesForRent = await http(PROPERTIES_FOR_RENT_URL, urlParams);
+      const propertiesForSale = await http(PROPERTIES_FOR_SALE_URL, urlParams);
+      const propertiesForRent = await http(PROPERTIES_FOR_RENT_URL, urlParams);
 
-      // await Promise.all([propertiesForSale, propertiesForRent]);
+      await Promise.all([propertiesForSale, propertiesForRent]);
 
-      // const properties = [
-      //   ...propertiesForSale.properties,
-      //   ...propertiesForRent.properties,
-      // ].filter(prop => prop.thumbnail || prop.photos_count);
-
-      // get properties from file
-      const properties = Properties.filter(prop => {
-        const { thumbnail, photos_count, address, building_size } = prop;
+      const properties = [
+        ...propertiesForSale.properties,
+        ...propertiesForRent.properties,
+      ].filter(prop => {
+        const {
+          thumbnail,
+          photos_count,
+          building_size,
+          prop_status,
+          price,
+          baths,
+          beds,
+          address,
+        } = prop;
 
         return (
           (thumbnail || photos_count) &&
-          address?.neighborhood_name &&
-          building_size?.size
+          building_size?.size &&
+          prop_status &&
+          price &&
+          baths &&
+          beds &&
+          address.city &&
+          address.neighborhood_name
         );
       });
 
@@ -67,6 +74,9 @@ class SearchResultsComponent extends Component {
           error: 'There were no suggestions found for the given location.',
           properties: [],
         });
+
+        this.props.history.push('/nothingfound');
+
         return;
       }
 
@@ -75,12 +85,14 @@ class SearchResultsComponent extends Component {
       });
     } catch (error) {
       console.log(error);
+
       this.setState({ error: error.message });
     }
   }
 
   setView = view => {
     this.setState({ view });
+
     localStorage.setItem('view', view);
   };
 
@@ -93,7 +105,7 @@ class SearchResultsComponent extends Component {
   render() {
     const { view, offset, properties } = this.state;
 
-    return (
+    return this.state.properties.length > 0 ? (
       <div className={styles.container}>
         <SearchResultsHeader
           setView={this.setView}
@@ -116,6 +128,10 @@ class SearchResultsComponent extends Component {
             Load more ...
           </button>
         )}
+      </div>
+    ) : (
+      <div className={styles.loading}>
+        <h1>Loading...</h1>
       </div>
     );
   }

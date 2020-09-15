@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { ReactComponent as StarIcon } from '../../assets/icons/star.svg';
+import { numberWithSpaces } from '../../utils/utils';
 import styles from './Property.module.scss';
 
 export default class Property extends Component {
-  numberWithSpaces(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-  }
-
   render() {
     const {
       prop_status,
@@ -31,9 +28,7 @@ export default class Property extends Component {
         </div>
         <div className={styles.picture}>
           <div className={styles.highlightLineTop}>
-            <span className={styles.price}>
-              ${this.numberWithSpaces(price)}
-            </span>
+            <span className={styles.price}>${numberWithSpaces(price)}</span>
           </div>
           <img src={thumbnail || photos[0].href} alt="thumbnail" />
           <div className={styles.highlightLineBottom}>
@@ -42,7 +37,7 @@ export default class Property extends Component {
             <span className={styles.infoNumber}>{size}</span>
           </div>
         </div>
-        <div className={styles.infoText}>
+        <div className={styles.infoDetails}>
           <span>Baths</span>
           <span>Beds</span>
           <span>Area</span>

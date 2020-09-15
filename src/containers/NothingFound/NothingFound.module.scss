@@ -1,0 +1,30 @@
+@import '../../styles/vars.scss';
+
+.nothingFound {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    margin: 50px 0px 60px 0px;
+    color: $raven;
+    font-size: 26px;
+    line-height: 16px;
+  }
+
+  a {
+    padding: 12px 30px;
+    border-radius: 3px;
+    background: $flamingo;
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+
+    &:hover {
+      background: darken($flamingo, 10%);
+    }
+  }
+}
