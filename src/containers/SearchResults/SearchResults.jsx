@@ -105,16 +105,18 @@ class SearchResultsComponent extends Component {
   render() {
     const { view, offset, properties } = this.state;
 
+    const headerText = `${
+      offset + this.#SHOW_MORE_PROPS_VALUE < properties.length
+        ? offset + this.#SHOW_MORE_PROPS_VALUE
+        : properties.length
+    } of ${properties.length} matches`;
+
     return this.state.properties.length > 0 ? (
       <div className={styles.container}>
         <SearchResultsHeader
           setView={this.setView}
           view={view}
-          text={`${
-            offset + this.#SHOW_MORE_PROPS_VALUE < properties.length
-              ? offset + this.#SHOW_MORE_PROPS_VALUE
-              : properties.length
-          } of ${properties.length} matches`}
+          text={headerText}
         />
         <PropertyList
           properties={properties.slice(0, offset + this.#SHOW_MORE_PROPS_VALUE)}
