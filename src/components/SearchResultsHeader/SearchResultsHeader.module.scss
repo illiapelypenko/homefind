@@ -1,0 +1,32 @@
+@import '../../styles/vars.scss';
+
+.searchResultsHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 70px;
+  margin-bottom: 20px;
+
+  .viewToggler {
+    position: absolute;
+    right: 0px;
+
+    button {
+      fill: white;
+
+      &:hover {
+        fill: $zircon;
+      }
+
+      &.btnLeft {
+        margin-right: -2px;
+      }
+
+      &.btnSelected {
+        fill: $zircon;
+      }
+    }
+  }
+}

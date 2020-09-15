@@ -1,0 +1,138 @@
+@import '../../styles/vars.scss';
+
+.propertyCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 292px;
+  height: 420px;
+  border: 1px solid #dbdfe1;
+  border-radius: 3px;
+  background-color: white;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0px 4px 10px rgba(black, 0.15);
+  }
+}
+
+.ribbon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 32px;
+  background-color: $flamingo;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  text-transform: capitalize;
+  transform: translate(-120px, 10px) rotateZ(-45deg);
+}
+
+.starIcon {
+  position: absolute;
+  top: 21px;
+  right: 21px;
+  cursor: pointer;
+}
+
+.title {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 66%;
+  height: auto;
+  margin: auto;
+  text-align: center;
+
+  .neighborhoodName {
+    margin-bottom: 2px;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .city {
+    font-weight: 300;
+    font-style: normal;
+    font-size: 13px;
+    line-height: 15px;
+  }
+}
+
+.picture {
+  position: relative;
+  flex: 0 0;
+  height: 263px;
+
+  .highlightLine {
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    height: 40px;
+    background: rgba($color: white, $alpha: 0.5);
+
+    &Top {
+      @extend .highlightLine;
+      top: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .price {
+        color: $flamingo;
+        font-weight: 900;
+        font-size: 16px;
+        line-height: 19px;
+      }
+    }
+
+    &Bottom {
+      @extend .highlightLine;
+
+      bottom: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      color: black;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 19px;
+      text-align: center;
+
+      span {
+        width: 75px;
+      }
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.infoText {
+  display: flex;
+  flex: 0 0 20px;
+  align-items: center;
+  justify-content: center;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 11px;
+  line-height: 13px;
+
+  span {
+    width: 75px;
+    text-align: center;
+  }
+}

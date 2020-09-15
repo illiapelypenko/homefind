@@ -1,62 +1,24 @@
 @import '../../styles/vars.scss';
 
-.propertyCardBig {
-  position: relative;
+.container {
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  width: 292px;
-  height: 420px;
-  margin: 20px;
-  border: 1px solid #dbdfe1;
-  border-radius: 3px;
-  background-color: white;
-}
-
-.ribbon {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 32px;
-  background-color: $flamingo;
-  color: white;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 16px;
-  transform: translate(-110px, 20px) rotateZ(-45deg);
-}
-
-.title {
-  display: flex;
-  flex: 1 1;
+  flex: 1 0;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: auto;
+  padding: 20px 100px 50px 100px;
 
-  .name {
-    margin-bottom: 2px;
+  .loadMoreBtn {
+    margin-top: 25px;
+    padding: 8px 20px;
+    border-radius: 3px;
+    background: $flamingo;
+    color: white;
     font-weight: 500;
-    font-size: 24px;
-    line-height: 28px;
-  }
+    font-size: 14px;
+    line-height: 16px;
 
-  .city {
-    font-weight: 300;
-    font-style: normal;
-    font-size: 13px;
-    line-height: 15px;
-  }
-}
-
-.thumbnailWrapper {
-  height: 263px;
-
-  img {
-    height: 100%;
+    &:hover {
+      background: darken($flamingo, 10%);
+    }
   }
 }

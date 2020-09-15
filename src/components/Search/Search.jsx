@@ -101,16 +101,16 @@ class SearchComponent extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const place = this.state.place;
+    const { city, state_code } = this.state.place;
 
-    if (!place.city) {
+    if (!city) {
       this.setState({ error: 'Please choose a suggested place' });
       return;
     }
 
     this.setState({ inputValue: '' });
 
-    this.props.history.push('/search', { place });
+    this.props.history.push(`/search?city=${city}&state_code=${state_code}`);
   };
 
   render() {

@@ -1,0 +1,8 @@
+@import '../../styles/vars.scss';
+
+.propertyList {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  gap: 25px;
+  justify-content: center;
+}

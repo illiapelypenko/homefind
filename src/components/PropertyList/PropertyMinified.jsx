@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { ReactComponent as StarIcon } from '../../assets/icons/star.svg';
-import styles from './Property.module.scss';
+import styles from './PropertyMinified.module.scss';
 
-export default class Property extends Component {
+export default class PropertyMinified extends Component {
   numberWithSpaces(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
@@ -30,17 +30,7 @@ export default class Property extends Component {
           <span className={styles.city}>{city}</span>
         </div>
         <div className={styles.picture}>
-          <div className={styles.highlightLineTop}>
-            <span className={styles.price}>
-              ${this.numberWithSpaces(price)}
-            </span>
-          </div>
           <img src={thumbnail || photos[0].href} alt="thumbnail" />
-          <div className={styles.highlightLineBottom}>
-            <span className={styles.infoNumber}>{baths}</span>
-            <span className={styles.infoNumber}>{beds}</span>
-            <span className={styles.infoNumber}>{size}</span>
-          </div>
         </div>
         <div className={styles.infoText}>
           <span>Baths</span>
