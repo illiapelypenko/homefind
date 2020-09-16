@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
 import { ReactComponent as StarIcon } from '../../assets/icons/star.svg';
+import { ReactComponent as MediumSpinner } from '../../assets/icons/mediumSpinner.svg';
 import { numberWithSpaces } from '../../utils/utils';
-import styles from './Property.module.scss';
+import styles from './PropertyCard.module.scss';
 
-export default class Property extends Component {
+export default class PropertyCard extends Component {
+  state = {
+    propertyIsLoading: false,
+  };
+
+  handlePropertyClick = () => {
+    this.setState({ propertyIsLoading: true });
+
+    setTimeout(() => {
+      this.setState({ propertyIsLoading: false });
+    }, 2000);
+  };
+
   render() {
     const {
       prop_status,
@@ -17,7 +30,7 @@ export default class Property extends Component {
     } = this.props.property;
 
     return (
-      <li className={styles.propertyCard}>
+      <li className={styles.propertyCard} onClick={this.handlePropertyClick}>
         <div className={styles.ribbon}>
           <span>{prop_status.slice(4)}</span>
         </div>
@@ -42,6 +55,11 @@ export default class Property extends Component {
           <span>Beds</span>
           <span>Area</span>
         </div>
+        {this.state.propertyIsLoading && (
+          <div className={styles.propertyCardLoading}>
+            <MediumSpinner className={styles.spinner} />
+          </div>
+        )}
       </li>
     );
   }

@@ -20,7 +20,7 @@ class SearchComponent extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.error) setTimeout(() => this.setState({ error: '' }), 2000);
+    if (this.state.error) setTimeout(() => this.setState({ error: '' }), 4000);
   }
 
   getSuggestions = async place => {

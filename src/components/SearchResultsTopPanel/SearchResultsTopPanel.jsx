@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { ReactComponent as BtnLeftIcon } from '../../assets/icons/btnLeftIcon.svg';
 import { ReactComponent as BtnRightIcon } from '../../assets/icons/btnRightIcon.svg';
-import styles from './SearchResultsHeader.module.scss';
+import styles from './SearchResultsTopPanel.module.scss';
 
-class SearchResultsHeaderComponent extends Component {
+class SearchResultsTopPanelComponent extends Component {
   render() {
-    const { view, setView, text } = this.props;
+    const { cardSize, setView, text } = this.props;
 
     return (
       <div className={styles.searchResultsHeader}>
         <span className={styles.searchResultsHeaderText}>{text}</span>
-        <div className={styles.viewToggler}>
+        <div className={styles.cardSizeToggler}>
           <button
             className={`${styles.btnLeft} ${
-              view === 'standart' ? styles.btnSelected : null
+              cardSize === 'standart' ? styles.btnSelected : null
             }`}
             onClick={() => setView('standart')}
           >
@@ -22,7 +22,7 @@ class SearchResultsHeaderComponent extends Component {
           </button>
           <button
             className={`${styles.btnRight} ${
-              view === 'minified' ? styles.btnSelected : null
+              cardSize === 'minified' ? styles.btnSelected : null
             }`}
             onClick={() => setView('minified')}
           >
@@ -34,4 +34,4 @@ class SearchResultsHeaderComponent extends Component {
   }
 }
 
-export const SearchResultsHeader = withRouter(SearchResultsHeaderComponent);
+export const SearchResultsTopPanel = withRouter(SearchResultsTopPanelComponent);

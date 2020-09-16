@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { PropertyList, SearchResultsHeader } from '../../components';
+import { PropertyList, SearchResultsTopPanel } from '../../components';
+import { ReactComponent as SmallSpinner } from '../../assets/icons/smallSpinner.svg';
+import { ReactComponent as BigSpinner } from '../../assets/icons/bigSpinner.svg';
 import { http } from '../../utils/request';
 import styles from './SearchResults.module.scss';
 
 class SearchResultsComponent extends Component {
   state = {
     properties: [],
-    view: 'standart',
+    cardSize: 'standart',
     offset: 0,
+    propertiesIsLoading: false,
   };
 
   #SHOW_MORE_PROPS_VALUE = 20;
@@ -21,11 +24,11 @@ class SearchResultsComponent extends Component {
 
     this.getProperties({ city, state_code });
 
-    const view = localStorage.getItem('view');
+    const cardSize = localStorage.getItem('cardSize');
 
-    view
-      ? this.setState({ view })
-      : localStorage.setItem('view', this.state.view);
+    cardSize
+      ? this.setState({ cardSize })
+      : localStorage.setItem('cardSize', this.state.cardSize);
   }
 
   async getProperties({ city, state_code }) {
@@ -37,10 +40,10 @@ class SearchResultsComponent extends Component {
         `?sort=relevance&city=${city}&limit=500&offset=0&state_code=${state_code}`
       );
 
-      const propertiesForSale = await http(PROPERTIES_FOR_SALE_URL, urlParams);
-      const propertiesForRent = await http(PROPERTIES_FOR_RENT_URL, urlParams);
-
-      await Promise.all([propertiesForSale, propertiesForRent]);
+      const [propertiesForSale, propertiesForRent] = await Promise.all([
+        http(PROPERTIES_FOR_SALE_URL, urlParams),
+        http(PROPERTIES_FOR_RENT_URL, urlParams),
+      ]);
 
       const properties = [
         ...propertiesForSale.properties,
@@ -75,7 +78,9 @@ class SearchResultsComponent extends Component {
           properties: [],
         });
 
-        this.props.history.push('/nothingfound');
+        this.props.history.push('/nothingfound', {
+          message: 'We are sorry! We have not found any properties.',
+        });
 
         return;
       }
@@ -87,25 +92,42 @@ class SearchResultsComponent extends Component {
       console.log(error);
 
       this.setState({ error: error.message });
+
+      this.props.history.push('/nothingfound', {
+        message: 'We are sorry! Server is unavailable',
+      });
     }
   }
 
-  setView = view => {
-    this.setState({ view });
+  setView = cardSize => {
+    this.setState({ cardSize });
 
-    localStorage.setItem('view', view);
+    localStorage.setItem('cardSize', cardSize);
   };
 
   handleLoadMoreBtnClick = () => {
-    this.setState(state => ({
-      offset: state.offset + this.#SHOW_MORE_PROPS_VALUE,
-    }));
+    const scrollY = window.scrollY;
+
+    this.setState({ propertiesIsLoading: true });
+
+    setTimeout(() => {
+      this.setState(
+        state => ({
+          offset: state.offset + this.#SHOW_MORE_PROPS_VALUE,
+          propertiesIsLoading: false,
+        }),
+        () => window.scrollTo(0, scrollY)
+      );
+    }, 2000);
   };
 
   render() {
-    const { view, offset, properties } = this.state;
+    const { cardSize, offset, properties, propertiesIsLoading } = this.state;
 
-    const headerText = `${
+    const canLoadMoreProperties =
+      properties.length - offset - this.#SHOW_MORE_PROPS_VALUE > 0;
+
+    const topPanelText = `${
       offset + this.#SHOW_MORE_PROPS_VALUE < properties.length
         ? offset + this.#SHOW_MORE_PROPS_VALUE
         : properties.length
@@ -113,27 +135,33 @@ class SearchResultsComponent extends Component {
 
     return this.state.properties.length > 0 ? (
       <div className={styles.container}>
-        <SearchResultsHeader
+        <SearchResultsTopPanel
           setView={this.setView}
-          view={view}
-          text={headerText}
+          cardSize={cardSize}
+          text={topPanelText}
         />
         <PropertyList
           properties={properties.slice(0, offset + this.#SHOW_MORE_PROPS_VALUE)}
-          view={view}
+          cardSize={cardSize}
         />
-        {properties.length - offset - this.#SHOW_MORE_PROPS_VALUE > 0 && (
-          <button
-            onClick={this.handleLoadMoreBtnClick}
-            className={styles.loadMoreBtn}
-          >
-            Load more ...
-          </button>
-        )}
+        {canLoadMoreProperties &&
+          (propertiesIsLoading ? (
+            <div className={styles.loadMore}>
+              <SmallSpinner className={styles.spinner} />
+              <span> Loading...</span>
+            </div>
+          ) : (
+            <button
+              onClick={this.handleLoadMoreBtnClick}
+              className={styles.loadMoreBtn}
+            >
+              Load more ...
+            </button>
+          ))}
       </div>
     ) : (
       <div className={styles.loading}>
-        <h1>Loading...</h1>
+        <BigSpinner className={styles.spinner} />
       </div>
     );
   }
