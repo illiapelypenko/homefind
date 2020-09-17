@@ -8,6 +8,13 @@
   width: 100%;
   height: 70px;
   margin-bottom: 20px;
+  font-size: 18px;
+  line-height: 21px;
+
+  &TextBig {
+    font-size: 24px;
+    line-height: 28px;
+  }
 
   .cardSizeToggler {
     position: absolute;

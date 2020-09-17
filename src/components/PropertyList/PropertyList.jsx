@@ -12,8 +12,16 @@ export class PropertyList extends Component {
     this.checkFavorability();
   }
 
+  componentDidUpdate() {
+    if (this.props.properties.length === this.state.properties.length) return;
+
+    this.setState(
+      { properties: this.props.properties },
+      this.checkFavorability
+    );
+  }
+
   checkFavorability = () => {
-    console.log(this.props);
     const persistedData = localStorage.getItem('favs');
     let favs = [];
     if (persistedData) favs = JSON.parse(persistedData);
