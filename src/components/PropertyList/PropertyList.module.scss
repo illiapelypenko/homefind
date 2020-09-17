@@ -2,9 +2,9 @@
 
 .propertyList {
   display: grid;
-  grid-template-columns: repeat(4, max-content);
+  grid-template-columns: repeat(4, 1fr);
   gap: 25px;
-  justify-content: center;
+  justify-items: center;
 }
 
 .propertyListMinified {

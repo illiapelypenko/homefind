@@ -6,11 +6,17 @@ import styles from './SearchResultsTopPanel.module.scss';
 
 class SearchResultsTopPanelComponent extends Component {
   render() {
-    const { cardSize, setView, text } = this.props;
+    const { cardSize, setView, text, textSize } = this.props;
 
     return (
       <div className={styles.searchResultsHeader}>
-        <span className={styles.searchResultsHeaderText}>{text}</span>
+        <span
+          className={`${styles.searchResultsHeaderText} ${
+            textSize === 'big' ? styles.searchResultsHeaderTextBig : ''
+          }`}
+        >
+          {text}
+        </span>
         <div className={styles.cardSizeToggler}>
           <button
             className={`${styles.btnLeft} ${

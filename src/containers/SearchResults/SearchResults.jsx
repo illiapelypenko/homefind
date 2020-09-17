@@ -89,8 +89,6 @@ class SearchResultsComponent extends Component {
         properties,
       });
     } catch (error) {
-      console.log(error);
-
       this.setState({ error: error.message });
 
       this.props.history.push('/nothingfound', {

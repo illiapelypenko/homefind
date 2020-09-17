@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { PropertyList } from '../../components';
+import { PropertyList, SearchResultsTopPanel } from '../../components';
 import styles from './FavoriteProperties.module.scss';
 
 class FavoritePropertiesComponent extends Component {
@@ -19,15 +19,30 @@ class FavoritePropertiesComponent extends Component {
     const persistedData = localStorage.getItem('favs');
 
     if (persistedData) this.setState({ favs: JSON.parse(persistedData) });
-    else
+    if (!persistedData || JSON.parse(persistedData).length === 0)
       this.props.history.push('/nothingfound', {
-        message: 'No favs',
+        message: 'You have not added any properties to your favourites.',
+        fromFav: true,
       });
   }
 
+  setView = cardSize => {
+    this.setState({ cardSize });
+
+    localStorage.setItem('cardSize', cardSize);
+  };
+
   render() {
+    const topPanelText = 'Favorites';
+
     return (
       <div className={styles.container}>
+        <SearchResultsTopPanel
+          setView={this.setView}
+          cardSize={this.state.cardSize}
+          text={topPanelText}
+          textSize="big"
+        />
         <PropertyList
           properties={this.state.favs}
           cardSize={this.state.cardSize}
