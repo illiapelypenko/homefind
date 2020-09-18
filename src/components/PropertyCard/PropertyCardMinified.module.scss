@@ -1,0 +1,110 @@
+@import '../../styles/vars.scss';
+@import '../../styles/spinner.scss';
+
+.propertyCard {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  width: 608px;
+  height: 130px;
+  padding: 10px 43px 10px 14px;
+  border: 1px solid $zircon;
+  border-radius: 3px;
+  background-color: white;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0px 4px 10px rgba(black, 0.15);
+  }
+
+  &Loading {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -14px;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      background: rgba(black, 0.5);
+    }
+
+    svg {
+      z-index: 2;
+      margin-bottom: 20px;
+    }
+  }
+}
+
+.ribbon {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 32px;
+  background-color: $flamingo;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  text-transform: capitalize;
+  transform: translate(-282px, 10px) rotateZ(-45deg);
+}
+
+.starIcon {
+  position: absolute;
+  top: 21px;
+  right: 21px;
+  cursor: pointer;
+}
+
+.info {
+  margin-left: 20px;
+}
+
+.title {
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+.picture {
+  img {
+    width: 108px;
+    height: 108px;
+    border-radius: 3px;
+  }
+}
+
+.price {
+  display: block;
+  margin: 5px 0px;
+  color: $flamingo;
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+.infoDetails {
+  margin: 5px 0px 5px 0px;
+  color: $havana;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 15px;
+}
+
+.description {
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 18px;
+}

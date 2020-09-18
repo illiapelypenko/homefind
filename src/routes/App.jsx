@@ -1,24 +1,22 @@
 import React from 'react';
-import { Router, Switch, Route } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
-import { Header } from '../components';
-import { Home } from '../containers';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Header, NothingFound } from '../components';
+import { Home, SearchResults } from '../containers';
 import styles from './App.module.scss';
-
-const history = createBrowserHistory();
 
 const App = () => {
   return (
-    <Router history={history}>
+    <BrowserRouter>
       <div className={styles.container}>
         <Header />
         <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
+          <Route exact path="/" component={Home} />
+          <Route path="/search" component={SearchResults} />
+          <Route path="/nothingfound" component={NothingFound} />
+          <Route path="/" component={NothingFound} />
         </Switch>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 };
 

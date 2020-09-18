@@ -20,7 +20,7 @@ class SearchComponent extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.error) setTimeout(() => this.setState({ error: '' }), 2000);
+    if (this.state.error) setTimeout(() => this.setState({ error: '' }), 4000);
   }
 
   getSuggestions = async place => {
@@ -50,6 +50,7 @@ class SearchComponent extends Component {
 
   handleLocationButtonClick = e => {
     e.preventDefault();
+
     this.setState({ error: 'The use of location is currently disabled.' });
   };
 
@@ -71,6 +72,7 @@ class SearchComponent extends Component {
   handleChange = e => {
     const updateSuggestions = () => {
       if (this.#timeout) clearTimeout(this.#timeout);
+
       this.#timeout = setTimeout(
         () => this.getSuggestions(this.state.inputValue),
         1000
@@ -99,11 +101,17 @@ class SearchComponent extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    if (!this.state.place.city) {
+
+    const { city, state_code } = this.state.place;
+
+    if (!city) {
       this.setState({ error: 'Please choose a suggested place' });
       return;
     }
+
     this.setState({ inputValue: '' });
+
+    this.props.history.push(`/search?city=${city}&state_code=${state_code}`);
   };
 
   renderSuggestions = () => {

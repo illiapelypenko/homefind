@@ -8,10 +8,10 @@ export class Header extends Component {
   render() {
     return (
       <header className={styles.header}>
-        <h2 className={styles.logo}>
+        <Link to="/" className={styles.logo}>
           <LogoIcon className={styles.logoIcon} />
           <span>Homefind</span>
-        </h2>
+        </Link>
         <Link to="/faves" className={styles.favesBtn}>
           <StarIcon className={styles.starIcon} />
           <span>Your faves</span>
