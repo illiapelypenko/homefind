@@ -20,14 +20,23 @@ class SearchResultsComponent extends Component {
   }
 
   getProperties = async () => {
-    const params = new URLSearchParams(this.props.location.search);
+    const { location, dispatch, error, history, properties } = this.props;
+
+    const params = new URLSearchParams(location.search);
     const city = params.get('city');
     const state_code = params.get('state_code');
 
-    await this.props.dispatch(getProperties(city, state_code));
+    await dispatch(getProperties(city, state_code));
 
-    if (this.props.error.type === 'GET_PROPERTIES')
-      this.props.history.push('/nothingfound');
+    if (error.type === 'GET_PROPERTIES')
+      history.push('/nothingfound', {
+        message: error.message,
+      });
+
+    if (properties.length === 0)
+      history.push('/nothingfound', {
+        message: 'We are sorry! We have not found any properties.',
+      });
   };
 
   handleLoadMoreBtnClick = () => {
