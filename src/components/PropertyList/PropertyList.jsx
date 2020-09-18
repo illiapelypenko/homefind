@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropertyCard from '../PropertyCard/PropertyCard';
-import PropertyCardMinified from '../PropertyCard/PropertyCardMinified';
 import styles from './PropertyList.module.scss';
 
 export class PropertyList extends Component {
@@ -39,27 +38,20 @@ export class PropertyList extends Component {
   render() {
     return (
       <ul
-        className={
+        className={`${styles.propertyList} ${
           this.props.cardSize === 'minified'
             ? styles.propertyListMinified
-            : styles.propertyList
-        }
+            : styles.propertyListStandart
+        }`}
       >
-        {this.state.properties.map((property, i) =>
-          this.props.cardSize === 'minified' ? (
-            <PropertyCardMinified
-              property={property}
-              key={i}
-              checkFavorability={this.checkFavorability}
-            />
-          ) : (
-            <PropertyCard
-              property={property}
-              key={i}
-              checkFavorability={this.checkFavorability}
-            />
-          )
-        )}
+        {this.state.properties.map((property, index) => (
+          <PropertyCard
+            property={property}
+            cardSize={this.props.cardSize}
+            key={index}
+            checkFavorability={this.checkFavorability}
+          />
+        ))}
       </ul>
     );
   }
