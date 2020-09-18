@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Header, NothingFound } from '../components';
-import {
-  Home,
-  SearchResults,
-  PropertyPage,
-  FavoriteProperties,
-} from '../containers';
+import { Header } from './components';
 import styles from './App.module.scss';
-import { setCardSize, setFavs } from '../store/actions';
+import { setCardSize, setFavs } from './store/actions';
+import Navigator from './routes/Navigator';
 
 class App extends Component {
   componentDidMount() {
@@ -31,14 +26,7 @@ class App extends Component {
       <BrowserRouter>
         <div className={styles.container}>
           <Header />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/search" component={SearchResults} />
-            <Route path="/nothingfound" component={NothingFound} />
-            <Route path="/property" component={PropertyPage} />
-            <Route path="/faves" component={FavoriteProperties} />
-            <Route path="/" component={NothingFound} />
-          </Switch>
+          <Navigator />
         </div>
       </BrowserRouter>
     );
