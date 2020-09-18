@@ -1,13 +1,13 @@
 import { http } from '../utils/request';
 
 export const GET_PROPERTIES = 'GET_PROPERTIES';
+export const SET_CARD_SIZE = 'SET_CARD_SIZE';
+export const SET_FAVS = 'SET_FAVS';
 
 export function getProperties(city, state_code) {
   return async dispatch => {
     let properties;
-    let error = {
-      type: 'propertiesSearch',
-    };
+    let error = {};
 
     try {
       const BASE_URL = 'https://realtor.p.rapidapi.com';
@@ -54,13 +54,41 @@ export function getProperties(city, state_code) {
           'There were no suggestions found for the given location.';
       }
     } catch (err) {
-      error.message = err.message;
+      error.message = 'We are sorry! Server is unavailable';
     }
 
     dispatch({
-      action: GET_PROPERTIES,
+      type: GET_PROPERTIES,
       payload: properties,
       error,
     });
   };
+}
+
+export function setCardSize(cardSize) {
+  if (!cardSize) cardSize = 'standart';
+
+  localStorage.setItem('cardSize', cardSize);
+
+  return {
+    type: SET_CARD_SIZE,
+    payload: cardSize,
+  };
+}
+
+export function setFavs(favs) {
+  localStorage.setItem('favs', JSON.stringify(favs));
+  return {
+    type: SET_FAVS,
+    payload: favs,
+  };
+}
+
+export function addFav(fav, favs) {
+  return setFavs([...favs, fav]);
+}
+
+export function removeFav(fav, favs) {
+  const newFavs = favs.filter(item => item.property_id !== fav.property_id);
+  return setFavs(newFavs);
 }

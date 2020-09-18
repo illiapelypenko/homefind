@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { ReactComponent as StarIcon } from '../../assets/icons/starIcon.svg';
 import { ReactComponent as StarIconDisabled } from '../../assets/icons/starIconDisabled.svg';
 import { ReactComponent as MediumSpinner } from '../../assets/icons/mediumSpinner.svg';
 import { numberWithSpaces } from '../../utils/utils';
+import { addFav, removeFav } from '../../store/actions';
 import styles from './PropertyCardMinified.module.scss';
 
 class PropertyCardMinified extends Component {
@@ -23,31 +25,14 @@ class PropertyCardMinified extends Component {
 
   addToFavs = e => {
     e.stopPropagation();
-
-    const persistedData = localStorage.getItem('favs');
-    let favs = [];
-
-    if (persistedData) favs = JSON.parse(persistedData);
-
-    favs.push(this.props.property);
-    localStorage.setItem('favs', JSON.stringify(favs));
-
-    this.props.checkFavorability();
+    const { dispatch, property, favs } = this.props;
+    dispatch(addFav(property, favs));
   };
 
   removeFromFavs = e => {
     e.stopPropagation();
-
-    const persistedData = localStorage.getItem('favs');
-    const favs = JSON.parse(persistedData);
-    const removeIndex = favs.findIndex(
-      fav => fav.property_id === this.props.property.property_id
-    );
-
-    favs.splice(removeIndex, 1);
-    localStorage.setItem('favs', JSON.stringify(favs));
-
-    this.props.checkFavorability();
+    const { dispatch, property, favs } = this.props;
+    dispatch(removeFav(property, favs));
   };
 
   render() {
@@ -60,7 +45,6 @@ class PropertyCardMinified extends Component {
       beds,
       building_size: { size },
       address: { city, neighborhood_name },
-      isFav,
     } = this.props.property;
 
     return (
@@ -68,7 +52,7 @@ class PropertyCardMinified extends Component {
         <div className={styles.ribbon}>
           <span>{prop_status.slice(4)}</span>
         </div>
-        {isFav ? (
+        {this.props.isFav ? (
           <StarIcon className={styles.starIcon} onClick={this.removeFromFavs} />
         ) : (
           <StarIconDisabled
@@ -106,4 +90,9 @@ class PropertyCardMinified extends Component {
   }
 }
 
-export default withRouter(PropertyCardMinified);
+function mapStateToProps(state) {
+  const { favs } = state;
+  return { favs };
+}
+
+export default connect(mapStateToProps, null)(withRouter(PropertyCardMinified));

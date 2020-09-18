@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { ReactComponent as LocationIcon } from '../../assets/icons/location.svg';
 import { http } from '../../utils/request';
 import styles from './Search.module.scss';
@@ -179,4 +180,4 @@ class SearchComponent extends Component {
   }
 }
 
-export const Search = withRouter(SearchComponent);
+export const Search = connect(null, null)(withRouter(SearchComponent));
