@@ -4,9 +4,9 @@ import { ReactComponent as StarIcon } from '../../assets/icons/starIcon.svg';
 import { ReactComponent as StarIconDisabled } from '../../assets/icons/starIconDisabled.svg';
 import { ReactComponent as MediumSpinner } from '../../assets/icons/mediumSpinner.svg';
 import { addSpacesTo } from '../../utils/utils';
-import styles from './PropertyCardMinified.module.scss';
+import styles from './PropertyCardStandart.module.scss';
 
-class PropertyCardMinified extends Component {
+class PropertyCardStandart extends Component {
   render() {
     const {
       property: {
@@ -36,25 +36,25 @@ class PropertyCardMinified extends Component {
         ) : (
           <StarIconDisabled className={styles.starIcon} onClick={addToFavs} />
         )}
-        <div className={styles.picture}>
-          <img src={thumbnail || photos[0].href} alt="thumbnail" />
+        <div className={styles.title}>
+          <span className={styles.neighborhoodName}>{neighborhood_name}</span>
+          <span className={styles.city}>{city}</span>
         </div>
-        <div className={styles.info}>
-          <span className={styles.price}>${addSpacesTo(price)}</span>
-          <div className={styles.title}>
-            <span className={styles.neighborhoodName}>{neighborhood_name}</span>
-            ,&nbsp;
-            <span className={styles.city}>{city}</span>
+        <div className={styles.picture}>
+          <div className={styles.highlightLineTop}>
+            <span className={styles.price}>${addSpacesTo(price)}</span>
           </div>
-          <div className={styles.infoDetails}>
-            <span>{baths} baths</span>,&nbsp;<span>{beds} beds</span>,&nbsp;
-            <span>{size} area</span>
+          <img src={thumbnail || photos[0].href} alt="thumbnail" />
+          <div className={styles.highlightLineBottom}>
+            <span className={styles.infoNumber}>{baths}</span>
+            <span className={styles.infoNumber}>{beds}</span>
+            <span className={styles.infoNumber}>{size}</span>
           </div>
-          <div className={styles.description}>
-            It’s a spacious house with two bedrooms, a living room, a large
-            kitchen, two light bathrooms and a store room. There are
-            breathtaking views of the mountains ...
-          </div>
+        </div>
+        <div className={styles.infoDetails}>
+          <span>Baths</span>
+          <span>Beds</span>
+          <span>Area</span>
         </div>
         {propertyIsLoading && (
           <div className={styles.propertyCardLoading}>
@@ -66,4 +66,4 @@ class PropertyCardMinified extends Component {
   }
 }
 
-export default withRouter(PropertyCardMinified);
+export default withRouter(PropertyCardStandart);

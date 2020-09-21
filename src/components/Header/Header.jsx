@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { ReactComponent as StarIcon } from '../../assets/icons/star.svg';
+import { ReactComponent as StarIcon } from '../../assets/icons/starIcon.svg';
 import { ReactComponent as LogoIcon } from '../../assets/icons/arrow-right.svg';
 import styles from './Header.module.scss';
 
