@@ -30,7 +30,7 @@ export function getProperties(city, state_code) {
         ...propertiesForRent.properties,
       ];
 
-      properties = filter((prop) => {
+      properties = properties.filter((prop) => {
         const {
           thumbnail,
           photos_count,
