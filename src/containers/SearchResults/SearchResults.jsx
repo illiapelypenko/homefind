@@ -70,7 +70,7 @@ class SearchResultsComponent extends Component {
     } of ${properties.length} matches`;
 
     return error ? (
-      <NothingFound fromFav={false} />
+      <NothingFound />
     ) : properties.length > 0 ? (
       <div className={styles.container}>
         <SearchResultsTopPanel text={topPanelText} />

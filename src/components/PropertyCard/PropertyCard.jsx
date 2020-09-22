@@ -35,22 +35,15 @@ class PropertyCard extends Component {
   render() {
     const { cardSize, property, favs } = this.props;
 
-    const isFav =
-      favs.find((fav) => fav.property_id === property.property_id) !== undefined
-        ? true
-        : false;
+    const isFav = !!favs.find(
+      (fav) => fav.property_id === property.property_id
+    );
 
-    return cardSize === "standart" ? (
-      <PropertyCardStandart
-        property={property}
-        propertyIsLoading={this.state.propertyIsLoading}
-        onPropertyClick={this.handlePropertyClick}
-        addFav={this.addFav}
-        removeFav={this.removeFav}
-        isFav={isFav}
-      />
-    ) : (
-      <PropertyCardMinified
+    const Component =
+      cardSize === "standart" ? PropertyCardStandart : PropertyCardMinified;
+
+    return (
+      <Component
         property={property}
         propertyIsLoading={this.state.propertyIsLoading}
         onPropertyClick={this.handlePropertyClick}

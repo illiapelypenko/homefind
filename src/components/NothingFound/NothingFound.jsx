@@ -8,7 +8,10 @@ import styles from "./NothingFound.module.scss";
 function NothingFoundComponent(props) {
   return (
     <div className={styles.nothingFound}>
-      <img src={props.fromFav ? backgroundFav : background} alt='background' />
+      <img
+        src={props.type === "favorites" ? backgroundFav : background}
+        alt='background'
+      />
       <p>{props.error || "Page not found"}</p>
       <Link to='/'>Back to search</Link>
     </div>

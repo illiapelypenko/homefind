@@ -19,7 +19,7 @@ class FavoritePropertiesComponent extends Component {
       </div>
     ) : (
       <NothingFound
-        fromFav={true}
+        type='favorites'
         error='You have not added any properties to your favourites.'
       />
     );
