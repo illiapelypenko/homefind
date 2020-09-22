@@ -1,41 +1,40 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { ReactComponent as LocationIcon } from '../../assets/icons/location.svg';
-import { http } from '../../utils/request';
-import styles from './Search.module.scss';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { ReactComponent as LocationIcon } from "../../assets/icons/location.svg";
+import { http } from "../../utils/request";
+import styles from "./Search.module.scss";
 
 class SearchComponent extends Component {
   #timeout;
 
   state = {
-    inputValue: '',
+    inputValue: "",
     displaySuggestions: false,
     place: {},
     suggestions: [],
-    error: '',
+    error: "",
   };
 
   componentDidMount() {
-    this.getSuggestions('a');
+    this.getSuggestions("a");
   }
 
   componentDidUpdate() {
-    if (this.state.error) setTimeout(() => this.setState({ error: '' }), 4000);
+    if (this.state.error) setTimeout(() => this.setState({ error: "" }), 4000);
   }
 
-  getSuggestions = async place => {
-    if (!place) place = 'a';
+  getSuggestions = async (place) => {
+    if (!place) place = "a";
 
     try {
-      const BASE_URL = 'https://realtor.p.rapidapi.com';
-      const SUGGESTIONS_URL = BASE_URL + '/locations/auto-complete';
+      const BASE_URL = "https://realtor.p.rapidapi.com";
+      const SUGGESTIONS_URL = BASE_URL + "/locations/auto-complete";
       const urlParams = encodeURI(`?input=${place}`);
       const suggestions = await http(SUGGESTIONS_URL, urlParams);
 
       if (suggestions.autocomplete.length === 0) {
         this.setState({
-          error: 'There were no suggestions found for the given location.',
+          error: "There were no suggestions found for the given location.",
           suggestions: [],
         });
         return;
@@ -49,16 +48,16 @@ class SearchComponent extends Component {
     }
   };
 
-  handleLocationButtonClick = e => {
+  handleLocationButtonClick = (e) => {
     e.preventDefault();
 
-    this.setState({ error: 'The use of location is currently disabled.' });
+    this.setState({ error: "The use of location is currently disabled." });
   };
 
   handleFocus = () => {
     this.setState({
       displaySuggestions: true,
-      error: '',
+      error: "",
     });
   };
 
@@ -70,7 +69,7 @@ class SearchComponent extends Component {
     }
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     const updateSuggestions = () => {
       if (this.#timeout) clearTimeout(this.#timeout);
 
@@ -92,7 +91,7 @@ class SearchComponent extends Component {
     this.setState({ suggestionsHover: false });
   };
 
-  handleSuggestionClick = suggestion => {
+  handleSuggestionClick = (suggestion) => {
     this.setState({
       inputValue: `${suggestion.state_code}, ${suggestion.city}`,
       displaySuggestions: false,
@@ -100,17 +99,17 @@ class SearchComponent extends Component {
     });
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
 
     const { city, state_code } = this.state.place;
 
     if (!city) {
-      this.setState({ error: 'Please choose a suggested place' });
+      this.setState({ error: "Please choose a suggested place" });
       return;
     }
 
-    this.setState({ inputValue: '' });
+    this.setState({ inputValue: "" });
 
     this.props.history.push(`/search?city=${city}&state_code=${state_code}`);
   };
@@ -119,7 +118,7 @@ class SearchComponent extends Component {
     const { suggestions } = this.state;
 
     return suggestions
-      .filter(suggestion => suggestion.area_type === 'city')
+      .filter((suggestion) => suggestion.area_type === "city")
       .map((suggestion, index) => (
         <li
           onClick={() => this.handleSuggestionClick(suggestion)}
@@ -146,11 +145,11 @@ class SearchComponent extends Component {
           </button>
 
           <input
-            type="text"
-            name="location"
-            id="location"
+            type='text'
+            name='location'
+            id='location'
             value={inputValue}
-            autoComplete="off"
+            autoComplete='off'
             onChange={this.handleChange}
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
@@ -171,8 +170,8 @@ class SearchComponent extends Component {
         </div>
         <input
           onClick={this.handleSubmit}
-          type="submit"
-          value="Go"
+          type='submit'
+          value='Go'
           className={styles.submitBtn}
         />
       </form>
@@ -180,4 +179,4 @@ class SearchComponent extends Component {
   }
 }
 
-export const Search = connect(null, null)(withRouter(SearchComponent));
+export const Search = withRouter(SearchComponent);

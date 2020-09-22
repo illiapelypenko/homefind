@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { PropertyList, SearchResultsTopPanel } from "../../components";
+import {
+  PropertyList,
+  SearchResultsTopPanel,
+  NothingFound,
+} from "../../components";
 import { ReactComponent as SmallSpinner } from "../../assets/icons/smallSpinner.svg";
 import { ReactComponent as BigSpinner } from "../../assets/icons/bigSpinner.svg";
-import { getProperties } from "../../store/actions";
+import {
+  getProperties,
+  clearProperties,
+  clearError,
+} from "../../store/actions";
 import styles from "./SearchResults.module.scss";
 
 class SearchResultsComponent extends Component {
@@ -16,27 +24,19 @@ class SearchResultsComponent extends Component {
   #SHOW_MORE_PROPS_VALUE = 20;
 
   componentDidMount() {
+    this.props.clearProperties();
+    this.props.clearError();
     this.getProperties();
   }
 
-  getProperties = async () => {
-    const { location, dispatch, error, history, properties } = this.props;
+  getProperties = () => {
+    const { location, getProperties } = this.props;
 
     const params = new URLSearchParams(location.search);
     const city = params.get("city");
     const state_code = params.get("state_code");
 
-    await dispatch(getProperties(city, state_code));
-
-    if (error.type === "GET_PROPERTIES")
-      history.push("/nothingfound", {
-        message: error.message,
-      });
-
-    if (!properties.length)
-      history.push("/nothingfound", {
-        message: "We are sorry! We have not found any properties.",
-      });
+    getProperties(city, state_code);
   };
 
   handleLoadMoreBtnClick = () => {
@@ -56,7 +56,7 @@ class SearchResultsComponent extends Component {
   };
 
   render() {
-    const { properties } = this.props;
+    const { properties, error } = this.props;
 
     const { offset, propertiesIsLoading } = this.state;
 
@@ -69,7 +69,9 @@ class SearchResultsComponent extends Component {
         : properties.length
     } of ${properties.length} matches`;
 
-    return properties.length > 0 ? (
+    return error ? (
+      <NothingFound fromFav={false} />
+    ) : properties.length > 0 ? (
       <div className={styles.container}>
         <SearchResultsTopPanel text={topPanelText} />
         <PropertyList
@@ -98,11 +100,13 @@ class SearchResultsComponent extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({ properties, error } = state);
+const mapStateToProps = ({ properties, error }) => ({ properties, error });
 
-const mapDispatchToProps = () => ({
+const mapDispatchToProps = {
   getProperties,
-});
+  clearProperties,
+  clearError,
+};
 
 export const SearchResults = connect(
   mapStateToProps,

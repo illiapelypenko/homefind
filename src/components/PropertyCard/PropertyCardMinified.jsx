@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
 import { ReactComponent as StarIcon } from "../../assets/icons/starIcon.svg";
 import { ReactComponent as StarIconDisabled } from "../../assets/icons/starIconDisabled.svg";
 import { ReactComponent as MediumSpinner } from "../../assets/icons/mediumSpinner.svg";
 import { addSpacesTo } from "../../utils/utils";
-import { addFav, removeFav } from "../../store/actions";
 import styles from "./PropertyCardMinified.module.scss";
 
 class PropertyCardMinified extends Component {
@@ -20,12 +18,12 @@ class PropertyCardMinified extends Component {
         beds,
         building_size: { size },
         address: { city, neighborhood_name },
-        isFav,
       },
       onPropertyClick,
-      removeFromFavs,
-      addToFavs,
+      removeFav,
+      addFav,
       propertyIsLoading,
+      isFav,
     } = this.props;
 
     return (
@@ -34,9 +32,9 @@ class PropertyCardMinified extends Component {
           <span>{prop_status.slice(4)}</span>
         </div>
         {isFav ? (
-          <StarIcon className={styles.starIcon} onClick={removeFromFavs} />
+          <StarIcon className={styles.starIcon} onClick={removeFav} />
         ) : (
-          <StarIconDisabled className={styles.starIcon} onClick={addToFavs} />
+          <StarIconDisabled className={styles.starIcon} onClick={addFav} />
         )}
         <div className={styles.picture}>
           <img src={thumbnail || photos[0].href} alt='thumbnail' />
@@ -68,9 +66,4 @@ class PropertyCardMinified extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  const { favs } = state;
-  return { favs };
-}
-
-export default connect(mapStateToProps, null)(withRouter(PropertyCardMinified));
+export default withRouter(PropertyCardMinified);

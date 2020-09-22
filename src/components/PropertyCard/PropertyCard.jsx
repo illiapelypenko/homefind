@@ -1,14 +1,9 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { ReactComponent as StarIcon } from "../../assets/icons/starIcon.svg";
-import { ReactComponent as StarIconDisabled } from "../../assets/icons/starIconDisabled.svg";
-import { ReactComponent as MediumSpinner } from "../../assets/icons/mediumSpinner.svg";
-import { numberWithSpaces } from "../../utils/utils";
-import { addFav, removeFav } from "../../store/actions";
-import styles from "./PropertyCard.module.scss";
 import PropertyCardMinified from "./PropertyCardMinified";
 import PropertyCardStandart from "./PropertyCardStandart";
+import { addFav, removeFav } from "../../store/actions";
 
 class PropertyCard extends Component {
   state = {
@@ -25,44 +20,56 @@ class PropertyCard extends Component {
     }, 2000);
   };
 
-  addToFavs = (e) => {
+  addFav = (e) => {
     e.stopPropagation();
-    const { dispatch, property, favs } = this.props;
-    dispatch(addFav(property, favs));
+    const { property, addFav } = this.props;
+    addFav(property);
   };
 
-  removeFromFavs = (e) => {
+  removeFav = (e) => {
     e.stopPropagation();
-    const { dispatch, property, favs } = this.props;
-    dispatch(removeFav(property, favs));
+    const { property, removeFav } = this.props;
+    removeFav(property);
   };
 
   render() {
-    const { cardSize, property } = this.props;
+    const { cardSize, property, favs } = this.props;
+
+    const isFav =
+      favs.find((fav) => fav.property_id === property.property_id) !== undefined
+        ? true
+        : false;
 
     return cardSize === "standart" ? (
       <PropertyCardStandart
         property={property}
         propertyIsLoading={this.state.propertyIsLoading}
         onPropertyClick={this.handlePropertyClick}
-        addToFavs={this.addToFavs}
-        removeFromFavs={this.removeFromFavs}
+        addFav={this.addFav}
+        removeFav={this.removeFav}
+        isFav={isFav}
       />
     ) : (
       <PropertyCardMinified
         property={property}
         propertyIsLoading={this.state.propertyIsLoading}
         onPropertyClick={this.handlePropertyClick}
-        addToFavs={this.addToFavs}
-        removeFromFavs={this.removeFromFavs}
+        addFav={this.addFav}
+        removeFav={this.removeFav}
+        isFav={isFav}
       />
     );
   }
 }
 
-function mapStateToProps(state) {
-  const { favs } = state;
-  return { favs };
-}
+const mapStateToProps = ({ favs }) => ({ favs });
 
-export default connect(mapStateToProps, null)(withRouter(PropertyCard));
+const mapDispatchToProps = {
+  addFav,
+  removeFav,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(PropertyCard));

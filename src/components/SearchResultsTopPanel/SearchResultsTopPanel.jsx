@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { ReactComponent as BtnLeftIcon } from '../../assets/icons/btnLeftIcon.svg';
-import { ReactComponent as BtnRightIcon } from '../../assets/icons/btnRightIcon.svg';
-import styles from './SearchResultsTopPanel.module.scss';
-import { setCardSize } from '../../store/actions';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { ReactComponent as BtnLeftIcon } from "../../assets/icons/btnLeftIcon.svg";
+import { ReactComponent as BtnRightIcon } from "../../assets/icons/btnRightIcon.svg";
+import { setCardSize } from "../../store/actions";
+import styles from "./SearchResultsTopPanel.module.scss";
 
 class SearchResultsTopPanelComponent extends Component {
   render() {
-    const { cardSize, text, textSize, dispatch } = this.props;
+    const { cardSize, text, textSize, setCardSize } = this.props;
 
     return (
       <div className={styles.searchResultsHeader}>
         <span
           className={`${styles.searchResultsHeaderText} ${
-            textSize === 'big' ? styles.searchResultsHeaderTextBig : ''
+            textSize === "big" ? styles.searchResultsHeaderTextBig : ""
           }`}
         >
           {text}
@@ -22,17 +22,17 @@ class SearchResultsTopPanelComponent extends Component {
         <div className={styles.cardSizeToggler}>
           <button
             className={`${styles.btnLeft} ${
-              cardSize === 'standart' ? styles.btnSelected : null
+              cardSize === "standart" ? styles.btnSelected : null
             }`}
-            onClick={() => dispatch(setCardSize('standart'))}
+            onClick={() => setCardSize("standart")}
           >
             <BtnLeftIcon />
           </button>
           <button
             className={`${styles.btnRight} ${
-              cardSize === 'minified' ? styles.btnSelected : null
+              cardSize === "minified" ? styles.btnSelected : null
             }`}
-            onClick={() => dispatch(setCardSize('minified'))}
+            onClick={() => setCardSize("minified")}
           >
             <BtnRightIcon />
           </button>
@@ -42,12 +42,11 @@ class SearchResultsTopPanelComponent extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  const { cardSize } = state;
-  return { cardSize };
-}
+const mapStateToProps = ({ cardSize }) => ({ cardSize });
+
+const mapDispatchToProps = { setCardSize };
 
 export const SearchResultsTopPanel = connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(withRouter(SearchResultsTopPanelComponent));

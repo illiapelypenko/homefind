@@ -1,18 +1,21 @@
-import { http } from '../utils/request';
+import { http } from "../utils/request";
 
-export const GET_PROPERTIES = 'GET_PROPERTIES';
-export const SET_CARD_SIZE = 'SET_CARD_SIZE';
-export const SET_FAVS = 'SET_FAVS';
+export const GET_PROPERTIES = "GET_PROPERTIES";
+export const CLEAR_PROPERTIES = "CLEAR_PROPERTIES";
+export const SET_CARD_SIZE = "SET_CARD_SIZE";
+export const CLEAR_ERROR = "CLEAR_ERROR";
+export const ADD_FAV = "ADD_FAV";
+export const REMOVE_FAV = "REMOVE_FAV";
 
 export function getProperties(city, state_code) {
-  return async dispatch => {
+  return async (dispatch) => {
     let properties;
-    let error = {};
+    let error;
 
     try {
-      const BASE_URL = 'https://realtor.p.rapidapi.com';
-      const PROPERTIES_FOR_SALE_URL = BASE_URL + '/properties/v2/list-for-sale';
-      const PROPERTIES_FOR_RENT_URL = BASE_URL + '/properties/v2/list-for-rent';
+      const BASE_URL = "https://realtor.p.rapidapi.com";
+      const PROPERTIES_FOR_SALE_URL = BASE_URL + "/properties/v2/list-for-sale";
+      const PROPERTIES_FOR_RENT_URL = BASE_URL + "/properties/v2/list-for-rent";
       const urlParams = encodeURI(
         `?sort=relevance&city=${city}&limit=500&offset=0&state_code=${state_code}`
       );
@@ -25,7 +28,9 @@ export function getProperties(city, state_code) {
       properties = [
         ...propertiesForSale.properties,
         ...propertiesForRent.properties,
-      ].filter(prop => {
+      ];
+
+      properties = filter((prop) => {
         const {
           thumbnail,
           photos_count,
@@ -49,12 +54,11 @@ export function getProperties(city, state_code) {
         );
       });
 
-      if (properties.length === 0) {
-        error.message =
-          'There were no suggestions found for the given location.';
+      if (!properties.length) {
+        error = "We are sorry! We have not found any properties.";
       }
     } catch (err) {
-      error.message = 'We are sorry! Server is unavailable';
+      error = "We are sorry! Server is unavailable";
     }
 
     dispatch({
@@ -65,30 +69,35 @@ export function getProperties(city, state_code) {
   };
 }
 
-export function setCardSize(cardSize) {
-  if (!cardSize) cardSize = 'standart';
+export function clearProperties() {
+  return {
+    type: CLEAR_PROPERTIES,
+  };
+}
 
-  localStorage.setItem('cardSize', cardSize);
-
+export function setCardSize(cardSize = "standart") {
   return {
     type: SET_CARD_SIZE,
     payload: cardSize,
   };
 }
 
-export function setFavs(favs) {
-  localStorage.setItem('favs', JSON.stringify(favs));
+export function addFav(fav) {
   return {
-    type: SET_FAVS,
-    payload: favs,
+    type: ADD_FAV,
+    payload: fav,
   };
 }
 
-export function addFav(fav, favs) {
-  return setFavs([...favs, fav]);
+export function removeFav(fav) {
+  return {
+    type: REMOVE_FAV,
+    payload: fav,
+  };
 }
 
-export function removeFav(fav, favs) {
-  const newFavs = favs.filter(item => item.property_id !== fav.property_id);
-  return setFavs(newFavs);
+export function clearError() {
+  return {
+    type: CLEAR_ERROR,
+  };
 }

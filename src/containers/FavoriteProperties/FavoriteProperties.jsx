@@ -1,40 +1,32 @@
-import React, { Component } from 'react';
-import { withRouter, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { PropertyList, SearchResultsTopPanel } from '../../components';
-import styles from './FavoriteProperties.module.scss';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import {
+  PropertyList,
+  SearchResultsTopPanel,
+  NothingFound,
+} from "../../components";
+import styles from "./FavoriteProperties.module.scss";
 
 class FavoritePropertiesComponent extends Component {
   render() {
-    const topPanelText = 'Favorites';
-    const areFavs = this.props.favs.length || localStorage.getItem('favs');
+    const topPanelText = "Favorites";
 
-    return (
+    return this.props.favs.length ? (
       <div className={styles.container}>
-        <SearchResultsTopPanel text={topPanelText} textSize="big" />
-        {areFavs ? (
-          <PropertyList properties={this.props.favs} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/nothingfound',
-              state: {
-                message:
-                  'You have not added any properties to your favourites.',
-                fromFav: true,
-              },
-            }}
-          />
-        )}
+        <SearchResultsTopPanel text={topPanelText} textSize='big' />
+        <PropertyList properties={this.props.favs} />
       </div>
+    ) : (
+      <NothingFound
+        fromFav={true}
+        error='You have not added any properties to your favourites.'
+      />
     );
   }
 }
 
-function mapStateToProps(state) {
-  const { favs } = state;
-  return { favs };
-}
+const mapStateToProps = ({ favs }) => ({ favs });
 
 export const FavoriteProperties = connect(
   mapStateToProps,
