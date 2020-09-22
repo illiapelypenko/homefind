@@ -1,31 +1,26 @@
-import React, { Component } from 'react';
-import PropertyCard from '../PropertyCard/PropertyCard';
-import PropertyCardMinified from '../PropertyCard/PropertyCardMinified';
-import styles from './PropertyList.module.scss';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropertyCard from "../PropertyCard/PropertyCard";
+import styles from "./PropertyList.module.scss";
+import { connect } from "react-redux";
 
 class PropertyListComponent extends Component {
   render() {
     return (
       <ul
-        className={
-          this.props.cardSize === 'minified'
+        className={`${styles.propertyList} ${
+          this.props.cardSize === "minified"
             ? styles.propertyListMinified
-            : styles.propertyList
-        }
+            : styles.propertyListStandart
+        }`}
       >
-        {this.props.properties.map((property, i) => {
-          const isFav =
-            this.props.favs.find(
-              fav => fav.property_id === property.property_id
-            ) !== undefined;
-
-          return this.props.cardSize === 'minified' ? (
-            <PropertyCardMinified property={property} key={i} isFav={isFav} />
-          ) : (
-            <PropertyCard property={property} key={i} isFav={isFav} />
-          );
-        })}
+        {this.state.properties.map((property, index) => (
+          <PropertyCard
+            property={property}
+            cardSize={this.props.cardSize}
+            key={index}
+            checkFavorability={this.checkFavorability}
+          />
+        ))}
       </ul>
     );
   }

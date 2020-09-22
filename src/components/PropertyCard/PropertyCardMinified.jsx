@@ -1,70 +1,48 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { ReactComponent as StarIcon } from '../../assets/icons/starIcon.svg';
-import { ReactComponent as StarIconDisabled } from '../../assets/icons/starIconDisabled.svg';
-import { ReactComponent as MediumSpinner } from '../../assets/icons/mediumSpinner.svg';
-import { numberWithSpaces } from '../../utils/utils';
-import { addFav, removeFav } from '../../store/actions';
-import styles from './PropertyCardMinified.module.scss';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { ReactComponent as StarIcon } from "../../assets/icons/starIcon.svg";
+import { ReactComponent as StarIconDisabled } from "../../assets/icons/starIconDisabled.svg";
+import { ReactComponent as MediumSpinner } from "../../assets/icons/mediumSpinner.svg";
+import { addSpacesTo } from "../../utils/utils";
+import { addFav, removeFav } from "../../store/actions";
+import styles from "./PropertyCardMinified.module.scss";
 
 class PropertyCardMinified extends Component {
-  state = {
-    propertyIsLoading: false,
-  };
-
-  handlePropertyClick = () => {
-    this.setState({ propertyIsLoading: true });
-
-    setTimeout(() => {
-      this.setState({ propertyIsLoading: false });
-
-      this.props.history.push('/property', { property: this.props.property });
-    }, 2000);
-  };
-
-  addToFavs = e => {
-    e.stopPropagation();
-    const { dispatch, property, favs } = this.props;
-    dispatch(addFav(property, favs));
-  };
-
-  removeFromFavs = e => {
-    e.stopPropagation();
-    const { dispatch, property, favs } = this.props;
-    dispatch(removeFav(property, favs));
-  };
-
   render() {
     const {
-      prop_status,
-      thumbnail,
-      photos,
-      price,
-      baths,
-      beds,
-      building_size: { size },
-      address: { city, neighborhood_name },
-    } = this.props.property;
+      property: {
+        prop_status,
+        thumbnail,
+        photos,
+        price,
+        baths,
+        beds,
+        building_size: { size },
+        address: { city, neighborhood_name },
+        isFav,
+      },
+      onPropertyClick,
+      removeFromFavs,
+      addToFavs,
+      propertyIsLoading,
+    } = this.props;
 
     return (
-      <li className={styles.propertyCard} onClick={this.handlePropertyClick}>
+      <li className={styles.propertyCard} onClick={onPropertyClick}>
         <div className={styles.ribbon}>
           <span>{prop_status.slice(4)}</span>
         </div>
-        {this.props.isFav ? (
-          <StarIcon className={styles.starIcon} onClick={this.removeFromFavs} />
+        {isFav ? (
+          <StarIcon className={styles.starIcon} onClick={removeFromFavs} />
         ) : (
-          <StarIconDisabled
-            className={styles.starIcon}
-            onClick={this.addToFavs}
-          />
+          <StarIconDisabled className={styles.starIcon} onClick={addToFavs} />
         )}
         <div className={styles.picture}>
-          <img src={thumbnail || photos[0].href} alt="thumbnail" />
+          <img src={thumbnail || photos[0].href} alt='thumbnail' />
         </div>
         <div className={styles.info}>
-          <span className={styles.price}>${numberWithSpaces(price)}</span>
+          <span className={styles.price}>${addSpacesTo(price)}</span>
           <div className={styles.title}>
             <span className={styles.neighborhoodName}>{neighborhood_name}</span>
             ,&nbsp;
@@ -80,7 +58,7 @@ class PropertyCardMinified extends Component {
             breathtaking views of the mountains ...
           </div>
         </div>
-        {this.state.propertyIsLoading && (
+        {propertyIsLoading && (
           <div className={styles.propertyCardLoading}>
             <MediumSpinner className={styles.spinner} />
           </div>

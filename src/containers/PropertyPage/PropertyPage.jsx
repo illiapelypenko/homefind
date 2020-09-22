@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { numberWithSpaces } from '../../utils/utils';
+import { addSpacesTo } from '../../utils/utils';
 import styles from './PropertyPage.module.scss';
 
 export class PropertyPage extends Component {
@@ -25,7 +25,7 @@ export class PropertyPage extends Component {
             <span className={styles.secondaryAddress}>
               {state}, {neighborhood_name}
             </span>
-            <span className={styles.price}>${numberWithSpaces(price)}</span>
+            <span className={styles.price}>${addSpacesTo(price)}</span>
           </span>
           <span className={styles.thirdLine}>
             <span className={styles.type}>{prop_status.slice(4)}</span>
