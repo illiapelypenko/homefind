@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import PropertyCardMinified from './PropertyCardMinified';
-import PropertyCardStandart from './PropertyCardStandart';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import PropertyCardMinified from "./PropertyCardMinified";
+import PropertyCardStandart from "./PropertyCardStandart";
+import { addFav, removeFav } from "../../store/actions";
 
 class PropertyCard extends Component {
   state = {
@@ -14,60 +16,53 @@ class PropertyCard extends Component {
     setTimeout(() => {
       this.setState({ propertyIsLoading: false });
 
-      this.props.history.push('/property', { property: this.props.property });
+      this.props.history.push("/property", { property: this.props.property });
     }, 2000);
   };
 
-  addToFavs = e => {
+  addFav = (e) => {
     e.stopPropagation();
-
-    const persistedData = localStorage.getItem('favs');
-    let favs = [];
-
-    if (persistedData) favs = JSON.parse(persistedData);
-
-    favs.push(this.props.property);
-    localStorage.setItem('favs', JSON.stringify(favs));
-
-    this.props.checkFavorability();
+    const { property, addFav } = this.props;
+    addFav(property);
   };
 
-  removeFromFavs = e => {
+  removeFav = (e) => {
     e.stopPropagation();
-
-    const persistedData = localStorage.getItem('favs');
-    const favs = JSON.parse(persistedData);
-    const removeIndex = favs.findIndex(
-      fav => fav.property_id === this.props.property.property_id
-    );
-
-    favs.splice(removeIndex, 1);
-    localStorage.setItem('favs', JSON.stringify(favs));
-
-    this.props.checkFavorability();
+    const { property, removeFav } = this.props;
+    removeFav(property);
   };
 
   render() {
-    const { cardSize, property } = this.props;
+    const { cardSize, property, favs } = this.props;
 
-    return cardSize === 'standart' ? (
-      <PropertyCardStandart
+    const isFav = !!favs.find(
+      (fav) => fav.property_id === property.property_id
+    );
+
+    const Component =
+      cardSize === "standart" ? PropertyCardStandart : PropertyCardMinified;
+
+    return (
+      <Component
         property={property}
         propertyIsLoading={this.state.propertyIsLoading}
         onPropertyClick={this.handlePropertyClick}
-        addToFavs={this.addToFavs}
-        removeFromFavs={this.removeFromFavs}
-      />
-    ) : (
-      <PropertyCardMinified
-        property={property}
-        propertyIsLoading={this.state.propertyIsLoading}
-        onPropertyClick={this.handlePropertyClick}
-        addToFavs={this.addToFavs}
-        removeFromFavs={this.removeFromFavs}
+        addFav={this.addFav}
+        removeFav={this.removeFav}
+        isFav={isFav}
       />
     );
   }
 }
 
-export default withRouter(PropertyCard);
+const mapStateToProps = ({ favs }) => ({ favs });
+
+const mapDispatchToProps = {
+  addFav,
+  removeFav,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(PropertyCard));

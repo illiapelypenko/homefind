@@ -11,7 +11,7 @@ export async function http(url, urlParams = '', method = 'GET') {
   }
 
   try {
-    const timeout = async (time = 10000) => {
+    const timeout = async (time = 20000) => {
       await wait(time);
 
       throw Error('Session timeout');
@@ -32,6 +32,7 @@ export async function http(url, urlParams = '', method = 'GET') {
 
     return data;
   } catch (e) {
+    console.log(e);
     throw new Error(
       'An error occurred while searching. Please check your network connection and try again.'
     );
