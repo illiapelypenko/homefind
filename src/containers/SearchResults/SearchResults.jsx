@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { PropertyList, SearchResultsTopPanel } from '../../components';
-import { ReactComponent as SmallSpinner } from '../../assets/icons/smallSpinner.svg';
-import { ReactComponent as BigSpinner } from '../../assets/icons/bigSpinner.svg';
-import { getProperties } from '../../store/actions';
-import styles from './SearchResults.module.scss';
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { PropertyList, SearchResultsTopPanel } from "../../components";
+import { ReactComponent as SmallSpinner } from "../../assets/icons/smallSpinner.svg";
+import { ReactComponent as BigSpinner } from "../../assets/icons/bigSpinner.svg";
+import { getProperties } from "../../store/actions";
+import styles from "./SearchResults.module.scss";
 
 class SearchResultsComponent extends Component {
   state = {
@@ -23,19 +23,19 @@ class SearchResultsComponent extends Component {
     const { location, dispatch, error, history, properties } = this.props;
 
     const params = new URLSearchParams(location.search);
-    const city = params.get('city');
-    const state_code = params.get('state_code');
+    const city = params.get("city");
+    const state_code = params.get("state_code");
 
     await dispatch(getProperties(city, state_code));
 
-    if (error.type === 'GET_PROPERTIES')
-      history.push('/nothingfound', {
+    if (error.type === "GET_PROPERTIES")
+      history.push("/nothingfound", {
         message: error.message,
       });
 
-    if (properties.length === 0)
-      history.push('/nothingfound', {
-        message: 'We are sorry! We have not found any properties.',
+    if (!properties.length)
+      history.push("/nothingfound", {
+        message: "We are sorry! We have not found any properties.",
       });
   };
 
@@ -46,7 +46,7 @@ class SearchResultsComponent extends Component {
 
     setTimeout(() => {
       this.setState(
-        state => ({
+        (state) => ({
           offset: state.offset + this.#SHOW_MORE_PROPS_VALUE,
           propertiesIsLoading: false,
         }),
@@ -98,12 +98,13 @@ class SearchResultsComponent extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  const { properties, error } = state;
-  return { properties, error };
-}
+const mapStateToProps = (state) => ({ properties, error } = state);
+
+const mapDispatchToProps = () => ({
+  getProperties,
+});
 
 export const SearchResults = connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(withRouter(SearchResultsComponent));
